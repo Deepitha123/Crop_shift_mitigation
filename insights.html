@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Federated Learning Models</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%); color: white; padding: 20px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5em; font-weight: bold; }
+        .back-link { color: white; text-decoration: none; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 5px; }
+        .hero { background: linear-gradient(rgba(76, 140, 74, 0.9), rgba(44, 95, 45, 0.9)); color: white; padding: 50px 20px; text-align: center; }
+        .hero h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .main-content { padding: 40px 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .section-title { color: #2c5f2d; font-size: 1.5em; margin-bottom: 20px; border-bottom: 3px solid #4c8c4a; padding-bottom: 8px; }
+        .privacy-box { background: #e7f3ff; border-left: 4px solid #0066cc; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .privacy-box h3 { color: #004080; margin-bottom: 10px; }
+        .insight-card { background: linear-gradient(135deg, #4c8c4a 0%, #2c5f2d 100%); color: white; padding: 25px; border-radius: 10px; margin-bottom: 15px; }
+        .insight-card h3 { margin-bottom: 10px; font-size: 1.2em; }
+        .insight-card p { line-height: 1.6; margin-bottom: 10px; }
+        .accuracy-tag { background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; font-size: 0.85em; display: inline-block; margin-top: 5px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0; }
+        .stat-box { background: #f0f7f0; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid #4c8c4a; }
+        .stat-value { font-size: 2em; font-weight: bold; color: #2c5f2d; margin-bottom: 5px; }
+        .stat-label { font-size: 0.9em; color: #666; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #2c5f2d; }
+        .input-group select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+        .get-btn { background: #4c8c4a; color: white; padding: 15px 40px; border: none; border-radius: 8px; font-size: 1.1em; cursor: pointer; font-weight: bold; width: 100%; }
+        .get-btn:hover { background: #2c5f2d; }
+        .learning-viz { background: #f9f9f9; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center; }
+        .learning-nodes { display: flex; justify-content: space-around; align-items: center; margin: 20px 0; flex-wrap: wrap; gap: 15px; }
+        .node { width: 80px; height: 80px; border-radius: 50%; background: #4c8c4a; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em; }
+        .node-center { width: 100px; height: 100px; background: #2c5f2d; font-size: 1.1em; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.8em; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🌾 Crop Shift Mitigation</div>
+                <a href="index.html" class="back-link">← Back</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>🤖 Federated Learning Models</h1>
+            <p>AI-powered insights while keeping your data private</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="privacy-box">
+                <h3>🔒 Your Data Stays Private</h3>
+                <p>Our AI learns from patterns across thousands of farms without accessing your personal data. Your information never leaves your device - only anonymized insights are shared to improve predictions for everyone.</p>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">AI Learning Network</h2>
+                <div class="learning-viz">
+                    <h3 style="color: #2c5f2d; margin-bottom: 20px;">How It Works</h3>
+                    <div class="learning-nodes">
+                        <div class="node">Punjab<br>Farms</div>
+                        <div class="node">Gujarat<br>Farms</div>
+                        <div class="node-center">Central<br>AI Model</div>
+                        <div class="node">MP<br>Farms</div>
+                        <div class="node">Your<br>Farm</div>
+                    </div>
+                    <p style="margin-top: 20px; color: #666;">AI learns from 50,000+ farms while protecting individual privacy</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value">50,000+</div>
+                        <div class="stat-label">Contributing Farms</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">94%</div>
+                        <div class="stat-label">Prediction Accuracy</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">Data Privacy</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">Daily</div>
+                        <div class="stat-label">Model Updates</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Get Personalized AI Insights</h2>
+                <div class="input-group">
+                    <label for="region">Your Region</label>
+                    <select id="region">
+                        <option value="punjab">Punjab</option>
+                        <option value="gujarat">Gujarat</option>
+                        <option value="mp">Madhya Pradesh</option>
+                        <option value="rajasthan">Rajasthan</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="crop">Current Crop</label>
+                    <select id="crop">
+                        <option value="groundnut">Groundnut</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="sunflower">Sunflower</option>
+                    </select>
+                </div>
+                <button class="get-btn" onclick="getInsights()">Get AI Recommendations</button>
+            </div>
+
+            <div id="insights" style="display:none;">
+                <div class="card">
+                    <h2 class="section-title">Your Personalized Insights</h2>
+                    <div id="insightsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const insights = {
+            groundnut: [
+                { title: 'Optimal Planting Window', text: 'Based on 12,000+ farms in your region, planting in the next 2 weeks increases yield by 18% on average.', accuracy: '92% accurate' },
+                { title: 'Irrigation Recommendation', text: 'Similar soil conditions show best results with drip irrigation every 5 days instead of 7. Expected water savings: 25%.', accuracy: '89% accurate' },
+                { title: 'Market Timing', text: 'Analysis of 5,000+ sales shows holding harvest for 3 weeks post-monsoon increases prices by ₹320/quintal.', accuracy: '94% accurate' }
+            ],
+            mustard: [
+                { title: 'Seed Variety Suggestion', text: 'Farmers with similar climate using PM-30 variety report 15% higher yields. Consider switching next season.', accuracy: '91% accurate' },
+                { title: 'Pest Management Alert', text: 'Regional pattern analysis predicts aphid outbreak in 10 days. Preventive spray recommended now.', accuracy: '88% accurate' },
+                { title: 'Fertilizer Optimization', text: 'Data from 8,000+ farms suggests reducing urea by 10% and increasing phosphorus improves oil content.', accuracy: '90% accurate' }
+            ],
+            soybean: [
+                { title: 'Crop Rotation Insight', text: 'Alternating soybean with wheat shows 22% better soil health and 12% higher long-term yields.', accuracy: '93% accurate' },
+                { title: 'Harvest Timing', text: 'Network data indicates harvesting when moisture is 12-14% (vs 15-17%) reduces post-harvest losses by 30%.', accuracy: '95% accurate' },
+                { title: 'Byproduct Opportunity', text: 'Similar farmers earning extra ₹8,500/acre by selling soybean meal to nearby feed mills within 48 hours.', accuracy: '87% accurate' }
+            ],
+            sunflower: [
+                { title: 'Spacing Optimization', text: 'AI analysis of 6,000+ plots shows 60cm x 30cm spacing outperforms traditional 45cm x 45cm by 14%.', accuracy: '90% accurate' },
+                { title: 'Water Stress Prediction', text: 'Your region expected to face water stress in 20 days. Early harvest recommended for optimal oil content.', accuracy: '92% accurate' },
+                { title: 'Premium Market Access', text: 'Processors in your area paying 12% premium for sunflower with 40%+ oil content. Testing recommended.', accuracy: '89% accurate' }
+            ]
+        };
+
+        function getInsights() {
+            const crop = document.getElementById('crop').value;
+            const data = insights[crop];
+            
+            let html = '';
+            data.forEach(insight => {
+                html += `
+                    <div class="insight-card">
+                        <h3>💡 ${insight.title}</h3>
+                        <p>${insight.text}</p>
+                        <span class="accuracy-tag">🎯 ${insight.accuracy}</span>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('insightsList').innerHTML = html;
+            document.getElementById('insights').style.display = 'block';
+            document.getElementById('insights').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Pricing Alerts</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%); color: white; padding: 20px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5em; font-weight: bold; }
+        .back-link { color: white; text-decoration: none; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 5px; }
+        .hero { background: linear-gradient(rgba(76, 140, 74, 0.9), rgba(44, 95, 45, 0.9)); color: white; padding: 50px 20px; text-align: center; }
+        .hero h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .main-content { padding: 40px 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .section-title { color: #2c5f2d; font-size: 1.5em; margin-bottom: 20px; border-bottom: 3px solid #4c8c4a; padding-bottom: 8px; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #2c5f2d; }
+        .input-group select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+        .peak-times { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .time-box { background: linear-gradient(135deg, #4c8c4a 0%, #2c5f2d 100%); color: white; padding: 20px; border-radius: 10px; text-align: center; }
+        .time-label { font-size: 0.9em; opacity: 0.9; margin-bottom: 8px; }
+        .time-value { font-size: 1.8em; font-weight: bold; margin-bottom: 5px; }
+        .time-price { font-size: 1.1em; opacity: 0.95; }
+        .alert-card { background: #fff3cd; border-left: 4px solid #f39c12; padding: 20px; margin-bottom: 15px; border-radius: 8px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.9; } }
+        .alert-card h3 { color: #856404; margin-bottom: 10px; }
+        .alert-card.optimal { background: #d4edda; border-left-color: #28a745; }
+        .alert-card.optimal h3 { color: #155724; }
+        .calendar { background: #f9f9f9; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .calendar-header { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; color: #2c5f2d; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+        .day-cell { background: white; padding: 15px 10px; border-radius: 8px; text-align: center; border: 2px solid #e0e0e0; cursor: pointer; }
+        .day-cell:hover { border-color: #4c8c4a; }
+        .day-cell.peak { background: #d4edda; border-color: #28a745; font-weight: bold; }
+        .day-cell.good { background: #fff3cd; border-color: #f39c12; }
+        .subscribe-btn { background: #4c8c4a; color: white; padding: 15px 40px; border: none; border-radius: 8px; font-size: 1.1em; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+        .subscribe-btn:hover { background: #2c5f2d; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.8em; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🌾 Crop Shift Mitigation</div>
+                <a href="index.html" class="back-link">← Back</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>⏰ Dynamic Pricing Alerts</h1>
+            <p>Sell at the right time, maximize your profits</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="card">
+                <div class="input-group">
+                    <label for="crop">Your Crop</label>
+                    <select id="crop" onchange="updateAlerts()">
+                        <option value="groundnut">Groundnut</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="sunflower">Sunflower</option>
+                    </select>
+                </div>
+                <button class="subscribe-btn" onclick="subscribe()">Subscribe to Alerts</button>
+            </div>
+
+            <div class="alert-card optimal">
+                <h3>🎯 OPTIMAL SELLING TIME - NOW!</h3>
+                <p id="optimalAlert">Current prices for groundnut are at peak levels (₹5,650/quintal). Market analysis suggests selling within the next 3 days for maximum returns.</p>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">This Week's Peak Times</h2>
+                <div class="peak-times">
+                    <div class="time-box">
+                        <div class="time-label">Best Day</div>
+                        <div class="time-value" id="bestDay">Friday</div>
+                        <div class="time-price" id="bestPrice">₹5,650</div>
+                    </div>
+                    <div class="time-box">
+                        <div class="time-label">Current Price</div>
+                        <div class="time-value" id="currentPrice">₹5,400</div>
+                        <div class="time-price">Today</div>
+                    </div>
+                    <div class="time-box">
+                        <div class="time-label">Potential Gain</div>
+                        <div class="time-value" id="potentialGain">+₹250</div>
+                        <div class="time-price">Per Quintal</div>
+                    </div>
+                </div>
+
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <span>Next 14 Days - Optimal Selling Calendar</span>
+                    </div>
+                    <div class="calendar-grid" id="calendar"></div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 15px; background: #f0f7f0; border-radius: 8px;">
+                    <strong style="color: #2c5f2d;">Legend:</strong>
+                    <div style="margin-top: 10px; display: flex; gap: 20px; flex-wrap: wrap;">
+                        <span>🟢 <strong>Peak Price</strong> - Best time to sell</span>
+                        <span>🟡 <strong>Good Price</strong> - Favorable conditions</span>
+                        <span>⚪ <strong>Normal</strong> - Average prices</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Recent Price Alerts</h2>
+                <div id="alertsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cropData = {
+            groundnut: {
+                current: 5400, best: 5650, day: 'Friday', gain: 250,
+                optimal: 'Current prices for groundnut are at peak levels (₹5,650/quintal). Market analysis suggests selling within the next 3 days for maximum returns.',
+                alerts: [
+                    { time: '2 hours ago', msg: 'Price spike detected! Groundnut now at ₹5,450 (+3.2%)', type: 'good' },
+                    { time: '1 day ago', msg: 'Peak selling window opens Friday. Prepare for harvest.', type: 'peak' }
+                ]
+            },
+            mustard: {
+                current: 4800, best: 5050, day: 'Wednesday', gain: 250,
+                optimal: 'Mustard prices trending upward. Wednesday expected to hit ₹5,050/quintal with high demand from oil mills.',
+                alerts: [
+                    { time: '3 hours ago', msg: 'Good buying interest from processors. Prices stable at ₹4,850.', type: 'good' },
+                    { time: '2 days ago', msg: 'Weather-related supply concerns pushing prices higher.', type: 'peak' }
+                ]
+            },
+            soybean: {
+                current: 4200, best: 4450, day: 'Thursday', gain: 250,
+                optimal: 'Soybean demand increasing. Thursday forecast shows ₹4,450/quintal with strong export orders.',
+                alerts: [
+                    { time: '1 hour ago', msg: 'Export demand rising. Consider holding for 2-3 days.', type: 'good' },
+                    { time: '5 hours ago', msg: 'Price improvement expected mid-week. Current: ₹4,280.', type: 'peak' }
+                ]
+            },
+            sunflower: {
+                current: 5800, best: 6100, day: 'Saturday', gain: 300,
+                optimal: 'Sunflower at premium! Saturday predicted peak of ₹6,100/quintal due to cooking oil shortage.',
+                alerts: [
+                    { time: '30 mins ago', msg: 'Urgent: Prices jumped to ₹5,920! Weekend surge expected.', type: 'peak' },
+                    { time: '4 hours ago', msg: 'Multiple buyers bidding up prices. Strong market momentum.', type: 'good' }
+                ]
+            }
+        };
+
+        function updateAlerts() {
+            const crop = document.getElementById('crop').value;
+            const data = cropData[crop];
+
+            document.getElementById('currentPrice').textContent = '₹' + data.current;
+            document.getElementById('bestDay').textContent = data.day;
+            document.getElementById('bestPrice').textContent = '₹' + data.best;
+            document.getElementById('potentialGain').textContent = '+₹' + data.gain;
+            document.getElementById('optimalAlert').textContent = data.optimal;
+
+            let alertsHtml = '';
+            data.alerts.forEach(alert => {
+                const cardClass = alert.type === 'peak' ? 'optimal' : '';
+                alertsHtml += `
+                    <div class="alert-card ${cardClass}">
+                        <h3>${alert.type === 'peak' ? '🎯' : '📊'} ${alert.time}</h3>
+                        <p>${alert.msg}</p>
+                    </div>
+                `;
+            });
+            document.getElementById('alertsList').innerHTML = alertsHtml;
+
+            generateCalendar();
+        }
+
+        function generateCalendar() {
+            const calendar = document.getElementById('calendar');
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            let html = '';
+
+            days.forEach(day => {
+                html += `<div style="font-weight: bold; text-align: center; padding: 10px; color: #666;">${day}</div>`;
+            });
+
+            for (let i = 1; i <= 14; i++) {
+                const isPeak = [5, 12].includes(i);
+                const isGood = [3, 8, 10].includes(i);
+                const className = isPeak ? 'peak' : isGood ? 'good' : '';
+                html += `<div class="day-cell ${className}">${i}</div>`;
+            }
+
+            calendar.innerHTML = html;
+        }
+
+        function subscribe() {
+            alert('✓ Subscribed! You will receive SMS/WhatsApp alerts for optimal selling times.');
+        }
+
+        updateAlerts();
+    </script>
+</body>
+</html>

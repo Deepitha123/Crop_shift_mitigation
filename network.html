@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Value Chain Integration</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%); color: white; padding: 20px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5em; font-weight: bold; }
+        .back-link { color: white; text-decoration: none; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 5px; }
+        .hero { background: linear-gradient(rgba(76, 140, 74, 0.9), rgba(44, 95, 45, 0.9)); color: white; padding: 50px 20px; text-align: center; }
+        .hero h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .main-content { padding: 40px 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .section-title { color: #2c5f2d; font-size: 1.5em; margin-bottom: 20px; border-bottom: 3px solid #4c8c4a; padding-bottom: 8px; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #2c5f2d; }
+        .input-group select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab { background: #f0f7f0; padding: 12px 25px; border-radius: 8px; cursor: pointer; border: 2px solid #ddd; font-weight: 600; }
+        .tab.active { background: #4c8c4a; color: white; border-color: #4c8c4a; }
+        .partner-card { background: #f0f7f0; border-left: 4px solid #4c8c4a; padding: 20px; margin-bottom: 15px; border-radius: 8px; }
+        .partner-card h3 { color: #2c5f2d; margin-bottom: 10px; }
+        .partner-info { display: flex; gap: 15px; flex-wrap: wrap; margin: 10px 0; font-size: 0.95em; color: #666; }
+        .benefit-tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+        .benefit-tag { background: #d4edda; color: #155724; padding: 6px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; }
+        .connect-btn { background: #4c8c4a; color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .connect-btn:hover { background: #2c5f2d; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .stat-box { background: linear-gradient(135deg, #4c8c4a 0%, #2c5f2d 100%); color: white; padding: 20px; border-radius: 10px; text-align: center; }
+        .stat-value { font-size: 2em; font-weight: bold; margin-bottom: 5px; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.8em; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🌾 Crop Shift Mitigation</div>
+                <a href="index.html" class="back-link">← Back</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>🔗 Value Chain Integration</h1>
+            <p>Connect directly with the entire supply chain</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="card">
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value">250+</div>
+                        <div>Verified Partners</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">₹45L</div>
+                        <div>Avg Annual Revenue</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">15%</div>
+                        <div>Better Prices</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="input-group">
+                    <label for="product">Your Product</label>
+                    <select id="product" onchange="updatePartners()">
+                        <option value="oilseeds">Oilseeds (Main Crop)</option>
+                        <option value="oilcake">Oil Cake</option>
+                        <option value="husks">Husks & Shells</option>
+                    </select>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="filterCategory('all')">All Partners</div>
+                    <div class="tab" onclick="filterCategory('processor')">Processors</div>
+                    <div class="tab" onclick="filterCategory('feed')">Feed Manufacturers</div>
+                    <div class="tab" onclick="filterCategory('fertilizer')">Fertilizer Companies</div>
+                </div>
+
+                <div id="partnersList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const partners = {
+            oilseeds: [
+                { name: 'Adani Wilmar', cat: 'processor', type: 'Oil Processor', benefits: ['Contract Farming', 'Premium Prices', 'Quality Bonus'], contact: 'Direct Purchase', dist: '45 km' },
+                { name: 'Cargill India', cat: 'processor', type: 'Integrated Processor', benefits: ['Year-round Contract', 'Technical Support', 'Input Supply'], contact: 'Bulk Orders', dist: '60 km' },
+                { name: 'Mother Dairy', cat: 'processor', type: 'Cooperative', benefits: ['Fair Pricing', 'Instant Payment', 'Member Benefits'], contact: 'FPO Partnership', dist: '25 km' }
+            ],
+            oilcake: [
+                { name: 'Godrej Agrovet', cat: 'feed', type: 'Feed Manufacturer', benefits: ['Regular Orders', 'Good Rates', 'Pickup Service'], contact: 'Monthly Contract', dist: '35 km' },
+                { name: 'Amul Feed Division', cat: 'feed', type: 'Dairy Feed Producer', benefits: ['Premium Quality Pay', 'Volume Discount', 'Long-term Contract'], contact: 'Direct Supply', dist: '50 km' },
+                { name: 'Suguna Foods', cat: 'feed', type: 'Poultry Feed', benefits: ['Consistent Demand', 'Market Rate+10%', 'Quality Testing'], contact: 'Partnership', dist: '40 km' }
+            ],
+            husks: [
+                { name: 'Coromandel Fertilizers', cat: 'fertilizer', type: 'Fertilizer Co.', benefits: ['Bulk Purchase', 'Transport Arranged', 'Organic Input'], contact: 'Season Contract', dist: '55 km' },
+                { name: 'IFFCO Organic', cat: 'fertilizer', type: 'Organic Fertilizer', benefits: ['Premium Rates', 'Input Exchange', 'Technical Advice'], contact: 'Direct Deal', dist: '30 km' },
+                { name: 'Local Vermicompost Unit', cat: 'fertilizer', type: 'Compost Producer', benefits: ['Quick Payment', 'No Transport Cost', 'Regular Pickup'], contact: 'Weekly Supply', dist: '12 km' }
+            ]
+        };
+
+        let currentCategory = 'all';
+
+        function updatePartners() {
+            currentCategory = 'all';
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab')[0].classList.add('active');
+            displayPartners();
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            displayPartners();
+        }
+
+        function displayPartners() {
+            const product = document.getElementById('product').value;
+            const list = partners[product];
+            const filtered = currentCategory === 'all' ? list : list.filter(p => p.cat === currentCategory);
+            
+            let html = '';
+            filtered.forEach(p => {
+                html += `
+                    <div class="partner-card">
+                        <h3>${p.name}</h3>
+                        <div class="partner-info">
+                            <span>🏭 ${p.type}</span>
+                            <span>📍 ${p.dist} away</span>
+                            <span>📝 ${p.contact}</span>
+                        </div>
+                        <div class="benefit-tags">
+                            ${p.benefits.map(b => `<span class="benefit-tag">✓ ${b}</span>`).join('')}
+                        </div>
+                        <button class="connect-btn" onclick="alert('Request sent to ${p.name}. They will contact you within 48 hours.')">Send Connection Request</button>
+                    </div>
+                `;
+            });
+            document.getElementById('partnersList').innerHTML = html || '<p style="text-align:center;color:#666;padding:40px;">No partners found for this category</p>';
+        }
+
+        displayPartners();
+    </script>
+</body>
+</html>

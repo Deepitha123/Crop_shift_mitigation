@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictive Trend Analysis</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%); color: white; padding: 20px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5em; font-weight: bold; }
+        .back-link { color: white; text-decoration: none; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 5px; }
+        .hero { background: linear-gradient(rgba(76, 140, 74, 0.9), rgba(44, 95, 45, 0.9)); color: white; padding: 50px 20px; text-align: center; }
+        .hero h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .main-content { padding: 40px 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .section-title { color: #2c5f2d; font-size: 1.5em; margin-bottom: 20px; border-bottom: 3px solid #4c8c4a; padding-bottom: 8px; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #2c5f2d; }
+        .input-group select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+        .forecast-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0; }
+        .forecast-box { background: #f0f7f0; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid #4c8c4a; }
+        .forecast-label { font-size: 0.85em; color: #666; margin-bottom: 8px; }
+        .forecast-value { font-size: 1.8em; font-weight: bold; color: #2c5f2d; margin-bottom: 5px; }
+        .trend-indicator { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; margin-top: 5px; }
+        .trend-up { background: #d4edda; color: #155724; }
+        .trend-down { background: #f8d7da; color: #721c24; }
+        .trend-stable { background: #fff3cd; color: #856404; }
+        .chart-container { background: #f9f9f9; padding: 30px; border-radius: 10px; margin: 20px 0; }
+        .chart-bars { display: flex; align-items: flex-end; justify-content: space-around; height: 250px; border-bottom: 2px solid #ddd; }
+        .bar { width: 50px; background: linear-gradient(to top, #4c8c4a, #2c5f2d); border-radius: 5px 5px 0 0; position: relative; }
+        .bar-label { position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); font-size: 0.85em; font-weight: bold; white-space: nowrap; }
+        .bar-value { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 0.8em; font-weight: bold; color: #2c5f2d; }
+        .insight-box { background: #e7f3ff; border-left: 4px solid #0066cc; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .insight-box h3 { color: #004080; margin-bottom: 10px; }
+        .demand-factors { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .factor-card { background: white; padding: 15px; border-radius: 8px; border-left: 3px solid #4c8c4a; }
+        .factor-card strong { color: #2c5f2d; display: block; margin-bottom: 5px; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.8em; } .chart-bars { height: 200px; } .bar { width: 35px; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🌾 Crop Shift Mitigation</div>
+                <a href="index.html" class="back-link">← Back</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>🔮 Predictive Trend Analysis</h1>
+            <p>AI-powered forecasts for smarter planning</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="card">
+                <div class="input-group">
+                    <label for="crop">Select Crop</label>
+                    <select id="crop" onchange="updateForecast()">
+                        <option value="groundnut">Groundnut</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="sunflower">Sunflower</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">6-Month Price & Yield Forecast</h2>
+                <div class="forecast-grid">
+                    <div class="forecast-box">
+                        <div class="forecast-label">Current Price</div>
+                        <div class="forecast-value" id="currentPrice">-</div>
+                        <span class="trend-indicator trend-stable">Baseline</span>
+                    </div>
+                    <div class="forecast-box">
+                        <div class="forecast-label">3-Month Forecast</div>
+                        <div class="forecast-value" id="forecast3">-</div>
+                        <span class="trend-indicator" id="trend3">-</span>
+                    </div>
+                    <div class="forecast-box">
+                        <div class="forecast-label">6-Month Forecast</div>
+                        <div class="forecast-value" id="forecast6">-</div>
+                        <span class="trend-indicator" id="trend6">-</span>
+                    </div>
+                    <div class="forecast-box">
+                        <div class="forecast-label">Expected Yield</div>
+                        <div class="forecast-value" id="yieldForecast">-</div>
+                        <span class="trend-indicator" id="yieldTrend">-</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 style="color: #2c5f2d; margin-bottom: 20px;">Monthly Price Trend</h3>
+                    <div class="chart-bars" id="priceChart"></div>
+                </div>
+
+                <div class="insight-box">
+                    <h3>🎯 Market Intelligence</h3>
+                    <p id="marketInsight"></p>
+                    <div class="demand-factors">
+                        <div class="factor-card">
+                            <strong>Global Demand</strong>
+                            <span id="demandStatus">-</span>
+                        </div>
+                        <div class="factor-card">
+                            <strong>Weather Impact</strong>
+                            <span id="weatherImpact">-</span>
+                        </div>
+                        <div class="factor-card">
+                            <strong>Import Trends</strong>
+                            <span id="importTrends">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const forecasts = {
+            groundnut: {
+                current: 5400, m3: 5750, m6: 6100, yield: '20 q/acre',
+                trend3: 'up', trend6: 'up', yieldTrend: 'up',
+                prices: [5400, 5500, 5650, 5750, 5900, 6100],
+                insight: 'Strong upward trend expected due to increasing global demand for plant-based proteins and oil. Best time to plant for harvest in 6 months.',
+                demand: 'Rising (+12%)', weather: 'Favorable', imports: 'Declining'
+            },
+            mustard: {
+                current: 4800, m3: 4950, m6: 5100, yield: '13 q/acre',
+                trend3: 'up', trend6: 'up', yieldTrend: 'stable',
+                prices: [4800, 4850, 4900, 4950, 5050, 5100],
+                insight: 'Steady growth anticipated with government push for domestic oilseed production. Good opportunity for consistent returns.',
+                demand: 'Stable (+5%)', weather: 'Normal', imports: 'Stable'
+            },
+            soybean: {
+                current: 4200, m3: 4100, m6: 4350, yield: '16 q/acre',
+                trend3: 'down', trend6: 'up', yieldTrend: 'up',
+                prices: [4200, 4150, 4100, 4200, 4300, 4350],
+                insight: 'Short-term dip expected due to harvest season, but strong recovery predicted. Strategic opportunity for long-term investors.',
+                demand: 'Growing (+8%)', weather: 'Improving', imports: 'Reducing'
+            },
+            sunflower: {
+                current: 5800, m3: 6000, m6: 6300, yield: '18 q/acre',
+                trend3: 'up', trend6: 'up', yieldTrend: 'up',
+                prices: [5800, 5900, 6000, 6100, 6200, 6300],
+                insight: 'Excellent growth prospects driven by cooking oil demand surge. Premium prices expected throughout the season.',
+                demand: 'Strong (+15%)', weather: 'Excellent', imports: 'Low'
+            }
+        };
+
+        function updateForecast() {
+            const crop = document.getElementById('crop').value;
+            const data = forecasts[crop];
+
+            document.getElementById('currentPrice').textContent = '₹' + data.current;
+            document.getElementById('forecast3').textContent = '₹' + data.m3;
+            document.getElementById('forecast6').textContent = '₹' + data.m6;
+            document.getElementById('yieldForecast').textContent = data.yield;
+
+            const trend3 = document.getElementById('trend3');
+            trend3.textContent = data.trend3 === 'up' ? '↑ Rising' : '↓ Falling';
+            trend3.className = 'trend-indicator ' + (data.trend3 === 'up' ? 'trend-up' : 'trend-down');
+
+            const trend6 = document.getElementById('trend6');
+            trend6.textContent = data.trend6 === 'up' ? '↑ Rising' : '↓ Falling';
+            trend6.className = 'trend-indicator ' + (data.trend6 === 'up' ? 'trend-up' : 'trend-down');
+
+            const yieldTrend = document.getElementById('yieldTrend');
+            yieldTrend.textContent = data.yieldTrend === 'up' ? '↑ Improving' : '→ Stable';
+            yieldTrend.className = 'trend-indicator ' + (data.yieldTrend === 'up' ? 'trend-up' : 'trend-stable');
+
+            // Chart
+            const chart = document.getElementById('priceChart');
+            chart.innerHTML = '';
+            const maxPrice = Math.max(...data.prices);
+            data.prices.forEach((price, i) => {
+                const height = (price / maxPrice) * 200;
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = height + 'px';
+                bar.innerHTML = `
+                    <div class="bar-label">M${i + 1}</div>
+                    <div class="bar-value">₹${price}</div>
+                `;
+                chart.appendChild(bar);
+            });
+
+            document.getElementById('marketInsight').textContent = data.insight;
+            document.getElementById('demandStatus').textContent = data.demand;
+            document.getElementById('weatherImpact').textContent = data.weather;
+            document.getElementById('importTrends').textContent = data.imports;
+        }
+
+        updateForecast();
+    </script>
+</body>
+</html>

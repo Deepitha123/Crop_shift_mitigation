@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather & Yield Advisory</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%); color: white; padding: 20px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5em; font-weight: bold; }
+        .back-link { color: white; text-decoration: none; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 5px; }
+        .hero { background: linear-gradient(rgba(76, 140, 74, 0.9), rgba(44, 95, 45, 0.9)); color: white; padding: 50px 20px; text-align: center; }
+        .hero h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .main-content { padding: 40px 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .section-title { color: #2c5f2d; font-size: 1.5em; margin-bottom: 20px; border-bottom: 3px solid #4c8c4a; padding-bottom: 8px; }
+        .weather-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .weather-day { background: #f0f7f0; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid #4c8c4a; }
+        .weather-icon { font-size: 2.5em; margin-bottom: 10px; }
+        .weather-temp { font-size: 1.8em; font-weight: bold; color: #2c5f2d; }
+        .weather-desc { font-size: 0.9em; color: #666; margin-top: 5px; }
+        .advisory-box { background: #fff3cd; border-left: 4px solid #f39c12; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .advisory-box h3 { color: #856404; margin-bottom: 10px; }
+        .advisory-box ul { margin-left: 20px; }
+        .advisory-box li { margin-bottom: 8px; color: #555; }
+        .alert-box { background: #f8d7da; border-left: 4px solid #dc3545; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .alert-box h3 { color: #721c24; margin-bottom: 10px; }
+        .success-box { background: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 8px; }
+        .success-box h3 { color: #155724; margin-bottom: 10px; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #2c5f2d; }
+        .input-group select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+        .yield-estimate { background: linear-gradient(135deg, #4c8c4a 0%, #2c5f2d 100%); color: white; padding: 25px; border-radius: 10px; text-align: center; margin-top: 20px; }
+        .yield-value { font-size: 2.5em; font-weight: bold; margin: 10px 0; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.8em; } .weather-grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🌾 Crop Shift Mitigation</div>
+                <a href="index.html" class="back-link">← Back</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>🌤️ Weather & Yield Advisory</h1>
+            <p>IMD-based predictions for optimal farming decisions</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="card">
+                <div class="input-group">
+                    <label for="location">Your Location</label>
+                    <select id="location" onchange="updateWeather()">
+                        <option value="ludhiana">Ludhiana, Punjab</option>
+                        <option value="ahmadabad">Ahmadabad, Gujarat</option>
+                        <option value="indore">Indore, Madhya Pradesh</option>
+                        <option value="jaipur">Jaipur, Rajasthan</option>
+                    </select>
+                </div>
+
+                <h2 class="section-title">7-Day Weather Forecast</h2>
+                <div class="weather-grid" id="weatherGrid"></div>
+
+                <div class="alert-box">
+                    <h3>⚠️ Weather Alert</h3>
+                    <p id="weatherAlert">Heavy rainfall expected in 3 days. Postpone irrigation and consider harvest if crops are ready.</p>
+                </div>
+
+                <div class="advisory-box">
+                    <h3>📋 This Week's Advisory</h3>
+                    <ul id="advisoryList">
+                        <li><strong>Planting:</strong> Favorable conditions for sowing soybean (next 2 days)</li>
+                        <li><strong>Irrigation:</strong> Reduce watering before expected rainfall</li>
+                        <li><strong>Pest Control:</strong> High humidity may increase pest activity - monitor closely</li>
+                        <li><strong>Harvest:</strong> Good conditions for groundnut harvest (Days 5-7)</li>
+                    </ul>
+                </div>
+
+                <div class="success-box">
+                    <h3>✓ Optimal Actions This Week</h3>
+                    <p id="optimalAction">Perfect timing for mustard planting with soil moisture at optimal levels.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Yield Prediction</h2>
+                <div class="input-group">
+                    <label for="crop">Select Crop</label>
+                    <select id="crop" onchange="updateYield()">
+                        <option value="groundnut">Groundnut</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="sunflower">Sunflower</option>
+                    </select>
+                </div>
+
+                <div class="yield-estimate">
+                    <div>Expected Yield Per Acre</div>
+                    <div class="yield-value" id="yieldValue">18-22 quintals</div>
+                    <div style="font-size: 0.9em; opacity: 0.9;">Based on weather patterns & soil conditions</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const weatherData = {
+            ludhiana: [
+                { day: 'Mon', icon: '☀️', temp: '32°C', desc: 'Sunny' },
+                { day: 'Tue', icon: '🌤️', temp: '30°C', desc: 'Partly Cloudy' },
+                { day: 'Wed', icon: '⛅', temp: '28°C', desc: 'Cloudy' },
+                { day: 'Thu', icon: '🌧️', temp: '26°C', desc: 'Rain' },
+                { day: 'Fri', icon: '🌧️', temp: '25°C', desc: 'Heavy Rain' },
+                { day: 'Sat', icon: '🌤️', temp: '29°C', desc: 'Clearing' },
+                { day: 'Sun', icon: '☀️', temp: '31°C', desc: 'Sunny' }
+            ],
+            ahmadabad: [
+                { day: 'Mon', icon: '☀️', temp: '36°C', desc: 'Hot' },
+                { day: 'Tue', icon: '☀️', temp: '37°C', desc: 'Very Hot' },
+                { day: 'Wed', icon: '🌤️', temp: '35°C', desc: 'Partly Cloudy' },
+                { day: 'Thu', icon: '⛅', temp: '33°C', desc: 'Cloudy' },
+                { day: 'Fri', icon: '🌧️', temp: '30°C', desc: 'Rain' },
+                { day: 'Sat', icon: '🌤️', temp: '32°C', desc: 'Clearing' },
+                { day: 'Sun', icon: '☀️', temp: '34°C', desc: 'Sunny' }
+            ]
+        };
+
+        const yieldData = {
+            groundnut: '18-22 quintals',
+            mustard: '12-15 quintals',
+            soybean: '15-18 quintals',
+            sunflower: '16-20 quintals'
+        };
+
+        function updateWeather() {
+            const location = document.getElementById('location').value;
+            const data = weatherData[location] || weatherData.ludhiana;
+            const grid = document.getElementById('weatherGrid');
+            grid.innerHTML = '';
+
+            data.forEach(day => {
+                grid.innerHTML += `
+                    <div class="weather-day">
+                        <div><strong>${day.day}</strong></div>
+                        <div class="weather-icon">${day.icon}</div>
+                        <div class="weather-temp">${day.temp}</div>
+                        <div class="weather-desc">${day.desc}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function updateYield() {
+            const crop = document.getElementById('crop').value;
+            document.getElementById('yieldValue').textContent = yieldData[crop];
+        }
+
+        updateWeather();
+        updateYield();
+    </script>
+</body>
+</html>

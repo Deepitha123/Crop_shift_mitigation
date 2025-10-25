@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Shift Mitigation App — Empowering Oilseed Farmers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(76, 140, 74, 0.8), rgba(101, 67, 33, 0.7)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%234c8c4a" width="1200" height="600"/><path fill="%23654321" opacity="0.3" d="M0,300 Q300,200 600,300 T1200,300 L1200,600 L0,600 Z"/></svg>');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 120px 20px 100px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.4em;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 18px 50px;
+            font-size: 1.3em;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .cta-button:hover {
+            background: #e67e22;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 80px 20px;
+        }
+
+        section:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #2c5f2d;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .problem-section {
+            background: white;
+        }
+
+        .problem-content {
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        .problem-icons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .icon-box {
+            text-align: center;
+            padding: 30px;
+            background: #f0f7f0;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .icon-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-left: 4px solid #4c8c4a;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-left-color: #f39c12;
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            color: #4c8c4a;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #2c5f2d;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .view-btn {
+            display: inline-block;
+            background: #4c8c4a;
+            color: white;
+            padding: 10px 25px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .view-btn:hover {
+            background: #2c5f2d;
+            transform: translateX(5px);
+        }
+
+        /* Benefits Section */
+        .benefits {
+            background: linear-gradient(135deg, #4c8c4a 0%, #2c5f2d 100%) !important;
+            color: white;
+        }
+
+        .benefits h2 {
+            color: white;
+        }
+
+        .benefits-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .benefit-icon {
+            font-size: 2em;
+            color: #f39c12;
+        }
+
+        .benefit-text h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        /* Simulator Section */
+        .simulator {
+            background: white;
+        }
+
+        .simulator-widget {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #f0f7f0;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c5f2d;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #4c8c4a;
+        }
+
+        .result-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+            border: 3px solid #4c8c4a;
+        }
+
+        .result-value {
+            font-size: 2.5em;
+            color: #2c5f2d;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .simulate-btn {
+            background: #4c8c4a;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .simulate-btn:hover {
+            background: #2c5f2d;
+            transform: scale(1.05);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: #f9f9f9;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .quote-icon {
+            font-size: 3em;
+            color: #f39c12;
+            opacity: 0.3;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            font-size: 1.05em;
+            line-height: 1.7;
+        }
+
+        .farmer-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .farmer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #4c8c4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .farmer-details h5 {
+            color: #2c5f2d;
+            margin-bottom: 5px;
+        }
+
+        .farmer-details p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* CTA Footer */
+        .cta-footer {
+            background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        html {
+  scroll-behavior: smooth;
+}
+
+        .cta-footer h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .cta-footer p {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-secondary {
+            background: white;
+            color: #2c5f2d;
+        }
+
+        .cta-secondary:hover {
+            background: #f0f7f0;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a3a1b;
+            color: white;
+            padding: 50px 20px 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 20px;
+            color: #f39c12;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #f39c12;
+        }
+
+        .gov-logos {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .gov-logo {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #2c5f2d;
+            font-weight: bold;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .hero p {
+                font-size: 1.1em;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Crop Shift Mitigation App — Empowering Oilseed Farmers</h1>
+            <p>Data-driven decisions, market access, and government support for sustainable oilseed cultivation</p>
+            <a href="#problem-section" class="cta-button">Happy Farmer</a>
+        </div>
+    </section>
+
+    <!-- Why Oilseed Farming -->
+    <section class="problem-section">
+        <div class="container">
+            <h2>Why Oilseed Farming?</h2>
+            <div class="problem-content">
+                <p>India's farmers are increasingly shifting from oilseeds to paddy and sugarcane due to assured procurement and price stability. This trend has deepened our import dependence, costing the nation valuable foreign exchange and threatening our agricultural self-sufficiency. The shift away from oilseeds creates environmental challenges and reduces our ability to meet domestic edible oil demand.</p>
+            </div>
+            <div class="problem-icons">
+                <div class="icon-box">
+                    <div class="icon">🌾</div>
+                    <h3>Assured Procurement Gap</h3>
+                    <p>Cereals have guaranteed government purchase, oilseeds lack similar support</p>
+                </div>
+                <div class="icon-box">
+                    <div class="icon">📈</div>
+                    <h3>Price Volatility</h3>
+                    <p>Unpredictable oilseed markets create profitability uncertainty for farmers</p>
+                </div>
+                <div class="icon-box">
+                    <div class="icon">🌍</div>
+                    <h3>National Benefits</h3>
+                    <p>Oilseed self-reliance reduces imports, helps environment, and strengthens economy</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Features -->
+    <section>
+        <div class="container">
+            <h2>Our Solution: Smart Tools for Profitable Oilseed Farming</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Comparative Crop Economics Dashboard</h3>
+                    <p>Real-time market prices, input costs, and profit simulations comparing oilseeds with alternative crops</p>
+                    <a href="dashboard.html" class="view-btn">View Dashboard →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Virtual Profitability Simulator</h3>
+                    <p>Multi-year what-if scenarios to plan your crop rotation and maximize long-term returns</p>
+                    <a href="simulator.html" class="view-btn">View Simulator →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔔</div>
+                    <h3>Real-Time Price Alerts</h3>
+                    <p>Instant notifications from AGMARKNET and mandi data for optimal selling decisions</p>
+                    <a href="alerts.html" class="view-btn">View Alerts →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Scheme & Subsidy Auto-Matching</h3>
+                    <p>Automatic identification of NMEO-OS, state subsidies, and PM-KISAN benefits you qualify for</p>
+                    <a href="schemes.html" class="view-btn">View Schemes →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌤️</div>
+                    <h3>Weather & Yield Advisory</h3>
+                    <p>IMD and satellite-based predictions to optimize planting, irrigation, and harvest timing</p>
+                    <a href="weather.html" class="view-btn">View Advisory →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏪</div>
+                    <h3>Procurement Center Finder & FPO Linkage</h3>
+                    <p>Connect directly with buyers, access digital contracts, and join farmer producer organizations</p>
+                    <a href="procurement.html" class="view-btn">View Centers →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">♻️</div>
+                    <h3>Byproduct Value Maximizer</h3>
+                    <p>Sell oilcakes, husks, and other byproducts to feed, fertilizer, and industrial buyers</p>
+                    <a href="byproduct.html" class="view-btn">View Market →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Global Benchmarking</h3>
+                    <p>Compare your regional crop prices and yields against international standards</p>
+                    <a href="global.html" class="view-btn">View Benchmarks →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔮</div>
+                    <h3>Predictive Trend Analysis</h3>
+                    <p>Future price and yield forecasts based on demand trends and market intelligence</p>
+                    <a href="trend.html" class="view-btn">View Predictions →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3>Dynamic Pricing Alerts</h3>
+                    <p>Get notified of peak sale times to maximize your income from every harvest</p>
+                    <a href="dynamic.html" class="view-btn">View Alerts →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3>Middlemen Margin Reduction</h3>
+                    <p>Direct negotiation with verified buyers to keep more profit in your pocket</p>
+                    <a href="middlemen.html" class="view-btn">View Buyers →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3>Value Chain Integration</h3>
+                    <p>Connect directly with processors, feed manufacturers, and fertilizer companies</p>
+                    <a href="network.html" class="view-btn">View Network →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Federated Learning Models</h3>
+                    <p>AI suggestions that improve across regions while keeping your data private</p>
+                    <a href="insights.html" class="view-btn">View Insights →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Gamification & Rewards</h3>
+                    <p>Earn points, badges, and climb leaderboards for sustained oilseed cultivation practices</p>
+                    <a href="rewards.html" class="view-btn">View Rewards →</a>
+                </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="benefits">
+        <div class="container">
+            <h2>How Does It Help You?</h2>
+            <div class="benefits-list">
+                <div class="benefit-item">
+                    <div class="benefit-icon">💵</div>
+                    <div class="benefit-text">
+                        <h4>Increased Profit</h4>
+                        <p>Optimize crop choice and timing to maximize returns from every acre</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🛡️</div>
+                    <div class="benefit-text">
+                        <h4>Reduced Risk</h4>
+                        <p>Make informed decisions with weather forecasts and market predictions</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">📝</div>
+                    <div class="benefit-text">
+                        <h4>Less Paperwork</h4>
+                        <p>Automatic subsidy matching and digital documentation simplifies everything</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🚚</div>
+                    <div class="benefit-text">
+                        <h4>Direct Buyer Access</h4>
+                        <p>Skip middlemen and negotiate better prices with verified buyers</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🌏</div>
+                    <div class="benefit-text">
+                        <h4>New Market Access</h4>
+                        <p>Discover opportunities in byproduct sales and value-added markets</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🌱</div>
+                    <div class="benefit-text">
+                        <h4>Sustainable Practices</h4>
+                        <p>Contribute to national self-sufficiency and environmental health</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🎁</div>
+                    <div class="benefit-text">
+                        <h4>Rewards & Discounts</h4>
+                        <p>Earn points for consistent oilseed farming and redeem for benefits</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">📱</div>
+                    <div class="benefit-text">
+                        <h4>Easy Mobile Access</h4>
+                        <p>All tools available on your smartphone, anytime, anywhere</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simulator Demo -->
+    <section class="simulator">
+        <div class="container">
+            <h2>Demo: What-If Profit Simulator</h2>
+            <p style="text-align: center; font-size: 1.1em; margin-bottom: 20px;">Try it: Simulate your potential profits!</p>
+            <div class="simulator-widget">
+                <div class="input-group">
+                    <label for="acreage">Land Area (acres)</label>
+                    <input type="number" id="acreage" value="5" min="1" max="100">
+                </div>
+                <div class="input-group">
+                    <label for="crop">Select Crop</label>
+                    <select id="crop">
+                        <option value="groundnut">Groundnut</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="sunflower">Sunflower</option>
+                        <option value="paddy">Paddy (comparison)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="subsidy">Include Government Subsidy</label>
+                    <select id="subsidy">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <button class="simulate-btn" onclick="simulateProfit()">Calculate Profit</button>
+                <div class="result-box" id="resultBox" style="display: none;">
+                    <p><strong>Estimated Annual Profit:</strong></p>
+                    <div class="result-value" id="profitValue">₹0</div>
+                    <p style="margin-top: 15px; color: #666;">Based on current market rates and historical yield data</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2>Success Stories from Farmers Like You</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testimonial-text">
+                        "I earned 22% more by switching to groundnut and using the app's price alerts and procurement center finder. The subsidy auto-matching saved me so much time!"
+                    </div>
+                    <div class="farmer-info">
+                        <div class="farmer-avatar">RS</div>
+                        <div class="farmer-details">
+                            <h5>Ramesh Singh</h5>
+                            <p>Groundnut Farmer, Punjab</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testimonial-text">
+                        "The byproduct marketplace helped me sell oilcakes to feed manufacturers. I never knew this extra income stream existed until I used this platform!"
+                    </div>
+                    <div class="farmer-info">
+                        <div class="farmer-avatar">MP</div>
+                        <div class="farmer-details">
+                            <h5>Meera Patel</h5>
+                            <p>Mustard Farmer, Gujarat</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testimonial-text">
+                        "Weather advisories and yield predictions helped me time my planting perfectly. My soybean harvest increased by 18% compared to last year!"
+                    </div>
+                    <div class="farmer-info">
+                        <div class="farmer-avatar">VK</div>
+                        <div class="farmer-details">
+                            <h5>Vijay Kumar</h5>
+                            <p>Soybean Farmer, Madhya Pradesh</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Footer -->
+    <section class="cta-footer">
+        <div class="container">
+            <h2>Ready to Transform Your Farming?</h2>
+            <p>Join thousands of farmers who are making smarter, more profitable decisions</p>
+            <div class="cta-buttons">
+                <a href="#" class="cta-button">Join as Farmer</a>
+                <a href="procurement.html" class="cta-button cta-secondary">Join as FPO/Processor</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>About</h4>
+                    <ul>
+                        <li><a href="#">Our Mission</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Partner With Us</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>For Farmers</h4>
+                    <ul>
+                        <li><a href="#">Getting Started</a></li>
+                        <li><a href="#">User Guide</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Market Prices</a></li>
+                        <li><a href="#">Weather Updates</a></li>
+                        <li><a href="#">Subsidy Schemes</a></li>
+                        <li><a href="#">Training Videos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Helpline: 1800-XXX-XXXX</a></li>
+                        <li><a href="#">Email: support@cropshift.in</a></li>
+                        <li><a href="#">Regional Offices</a></li>
+                        <li><a href="#">Feedback</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="gov-logos">
+                <div class="gov-logo">Ministry of Agriculture</div>
+                <div class="gov-logo">NMEO-OS</div>
+                <div class="gov-logo">Government of India</div>
+                <div class="gov-logo">PM-KISAN</div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Crop Shift Mitigation Platform. All rights reserved. | <a href="#" style="color: #999;">Privacy Policy</a> | <a href="#" style="color: #999;">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function simulateProfit() {
+            const acreage = parseFloat(document.getElementById('acreage').value);
+            const crop = document.getElementById('crop').value;
+            const subsidy = document.getElementById('subsidy').value;
+
+            // Dummy profit calculations (per acre base profits)
+            const baseProfits = {
+                'groundnut': 45000,
+                'mustard': 38000,
+                'soybean': 42000,
+                'sunflower': 40000,
+                'paddy': 35000
+            };
+
+            let profit = baseProfits[crop] * acreage;
+            
+            // Add subsidy bonus
+            if (subsidy === 'yes') {
+                profit += (profit * 0.15); // 15% subsidy benefit
+            }
+
+            // Display result with animation
+            const resultBox = document.getElementById('resultBox');
+            const profitValue = document.getElementById('profitValue');
+            
+            resultBox.style.display = 'block';
+            
+            // Animate number counting up
+            let current = 0;
+            const increment = profit / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= profit) {
+                    current = profit;
+                    clearInterval(timer);
+                }
+                profitValue.textContent = '₹' + Math.round(current).toLocaleString('en-IN');
+            }, 20);
+        }
+    </script>
+</body>
+</html>

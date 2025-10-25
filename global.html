@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Benchmarking</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%); color: white; padding: 20px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5em; font-weight: bold; }
+        .back-link { color: white; text-decoration: none; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 5px; }
+        .hero { background: linear-gradient(rgba(76, 140, 74, 0.9), rgba(44, 95, 45, 0.9)); color: white; padding: 50px 20px; text-align: center; }
+        .hero h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .main-content { padding: 40px 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .section-title { color: #2c5f2d; font-size: 1.5em; margin-bottom: 20px; border-bottom: 3px solid #4c8c4a; padding-bottom: 8px; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #2c5f2d; }
+        .input-group select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+        .compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }
+        .stat-box { background: #f0f7f0; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid #4c8c4a; }
+        .stat-label { font-size: 0.9em; color: #666; margin-bottom: 8px; }
+        .stat-value { font-size: 2em; font-weight: bold; color: #2c5f2d; }
+        .compare-card { background: linear-gradient(135deg, #4c8c4a 0%, #2c5f2d 100%); color: white; padding: 25px; border-radius: 10px; margin-bottom: 15px; }
+        .compare-row { display: flex; justify-content: space-between; margin: 10px 0; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.3); }
+        .insight-box { background: #fff3cd; border-left: 4px solid #f39c12; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .insight-box h3 { color: #856404; margin-bottom: 10px; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.8em; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🌾 Crop Shift Mitigation</div>
+                <a href="index.html" class="back-link">← Back</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>🌐 Global Benchmarking</h1>
+            <p>Compare with international standards</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="card">
+                <div class="input-group">
+                    <label for="region">Your Region</label>
+                    <select id="region" onchange="updateBenchmark()">
+                        <option value="punjab">Punjab, India</option>
+                        <option value="gujarat">Gujarat, India</option>
+                        <option value="mp">Madhya Pradesh, India</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="crop">Select Crop</label>
+                    <select id="crop" onchange="updateBenchmark()">
+                        <option value="groundnut">Groundnut</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="soybean">Soybean</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Your Region vs Global Leaders</h2>
+                <div class="compare-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Your Yield</div>
+                        <div class="stat-value" id="localYield">-</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Global Average</div>
+                        <div class="stat-value" id="globalYield">-</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Your Price</div>
+                        <div class="stat-value" id="localPrice">-</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Global Price</div>
+                        <div class="stat-value" id="globalPrice">-</div>
+                    </div>
+                </div>
+
+                <div class="compare-card">
+                    <h3 style="margin-bottom: 15px;">Top Producing Countries</h3>
+                    <div id="countryList"></div>
+                </div>
+
+                <div class="insight-box">
+                    <h3>💡 Insights & Opportunities</h3>
+                    <p id="insights"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+            groundnut: {
+                local: { yield: '18 q/acre', price: '₹5,400' },
+                global: { yield: '22 q/acre', price: '₹6,200' },
+                countries: [
+                    { name: 'China', yield: '28 q/acre', price: '₹6,800' },
+                    { name: 'USA', yield: '25 q/acre', price: '₹6,500' },
+                    { name: 'Argentina', yield: '23 q/acre', price: '₹6,300' }
+                ],
+                insight: 'Your yield is 18% below global average. Consider improved seed varieties and drip irrigation to boost productivity.'
+            },
+            mustard: {
+                local: { yield: '12 q/acre', price: '₹4,800' },
+                global: { yield: '15 q/acre', price: '₹5,400' },
+                countries: [
+                    { name: 'Canada', yield: '18 q/acre', price: '₹5,900' },
+                    { name: 'France', yield: '16 q/acre', price: '₹5,600' },
+                    { name: 'Germany', yield: '15 q/acre', price: '₹5,500' }
+                ],
+                insight: 'Good price competitiveness! Focus on yield improvement through precision farming techniques.'
+            },
+            soybean: {
+                local: { yield: '15 q/acre', price: '₹4,200' },
+                global: { yield: '19 q/acre', price: '₹5,000' },
+                countries: [
+                    { name: 'USA', yield: '24 q/acre', price: '₹5,800' },
+                    { name: 'Brazil', yield: '22 q/acre', price: '₹5,500' },
+                    { name: 'Argentina', yield: '20 q/acre', price: '₹5,200' }
+                ],
+                insight: 'Significant growth potential. Adopting best practices from top producers could increase yields by 30%.'
+            }
+        };
+
+        function updateBenchmark() {
+            const crop = document.getElementById('crop').value;
+            const d = data[crop];
+
+            document.getElementById('localYield').textContent = d.local.yield;
+            document.getElementById('globalYield').textContent = d.global.yield;
+            document.getElementById('localPrice').textContent = d.local.price;
+            document.getElementById('globalPrice').textContent = d.global.price;
+
+            let countryHtml = '';
+            d.countries.forEach(c => {
+                countryHtml += `
+                    <div class="compare-row">
+                        <strong>${c.name}</strong>
+                        <span>${c.yield} | ${c.price}</span>
+                    </div>
+                `;
+            });
+            document.getElementById('countryList').innerHTML = countryHtml;
+            document.getElementById('insights').textContent = d.insight;
+        }
+
+        updateBenchmark();
+    </script>
+</body>
+</html>

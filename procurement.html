@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procurement Center Finder</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%); color: white; padding: 20px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5em; font-weight: bold; }
+        .back-link { color: white; text-decoration: none; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 5px; }
+        .hero { background: linear-gradient(rgba(76, 140, 74, 0.9), rgba(44, 95, 45, 0.9)); color: white; padding: 50px 20px; text-align: center; }
+        .hero h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .main-content { padding: 40px 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .section-title { color: #2c5f2d; font-size: 1.5em; margin-bottom: 20px; border-bottom: 3px solid #4c8c4a; padding-bottom: 8px; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #2c5f2d; }
+        .input-group select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+        .center-card { background: #f0f7f0; border-left: 4px solid #4c8c4a; padding: 20px; margin-bottom: 15px; border-radius: 8px; }
+        .center-card h3 { color: #2c5f2d; margin-bottom: 10px; }
+        .center-info { display: flex; gap: 15px; flex-wrap: wrap; margin: 10px 0; font-size: 0.95em; color: #666; }
+        .contact-btn { background: #4c8c4a; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 10px; }
+        .contact-btn:hover { background: #2c5f2d; }
+        .fpo-card { background: linear-gradient(135deg, #4c8c4a 0%, #2c5f2d 100%); color: white; padding: 25px; border-radius: 10px; margin-bottom: 15px; }
+        .fpo-card h3 { margin-bottom: 10px; }
+        .join-btn { background: #f39c12; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .join-btn:hover { background: #e67e22; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.8em; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🌾 Crop Shift Mitigation</div>
+                <a href="index.html" class="back-link">← Back</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>🏪 Procurement Center Finder</h1>
+            <p>Connect with buyers and FPOs near you</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="card">
+                <div class="input-group">
+                    <label for="location">Select Your District</label>
+                    <select id="location" onchange="updateCenters()">
+                        <option value="ludhiana">Ludhiana, Punjab</option>
+                        <option value="ahmadabad">Ahmadabad, Gujarat</option>
+                        <option value="indore">Indore, Madhya Pradesh</option>
+                        <option value="jaipur">Jaipur, Rajasthan</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="crop">Crop Type</label>
+                    <select id="crop" onchange="updateCenters()">
+                        <option value="all">All Crops</option>
+                        <option value="groundnut">Groundnut</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="soybean">Soybean</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Nearby Procurement Centers</h2>
+                <div id="centersList"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Farmer Producer Organizations (FPOs)</h2>
+                <div id="fpoList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const centers = [
+            { name: 'NAFED Procurement Center', dist: '5 km', crops: 'All oilseeds', price: '₹5,400/quintal', phone: '9876543210' },
+            { name: 'State Cooperative Society', dist: '8 km', crops: 'Groundnut, Mustard', price: '₹5,200/quintal', phone: '9876543211' },
+            { name: 'Private Oil Mill', dist: '12 km', crops: 'All oilseeds', price: '₹5,500/quintal', phone: '9876543212' }
+        ];
+
+        const fpos = [
+            { name: 'Green Valley FPO', members: '450 farmers', benefit: 'Better input prices, direct market access', contact: '9876543220' },
+            { name: 'Oilseed Growers Cooperative', members: '320 farmers', benefit: 'Bulk selling, storage facilities', contact: '9876543221' }
+        ];
+
+        function updateCenters() {
+            let html = '';
+            centers.forEach(c => {
+                html += `
+                    <div class="center-card">
+                        <h3>${c.name}</h3>
+                        <div class="center-info">
+                            <span>📍 ${c.dist} away</span>
+                            <span>🌾 ${c.crops}</span>
+                            <span>💰 ${c.price}</span>
+                        </div>
+                        <button class="contact-btn" onclick="alert('Calling ${c.phone}')">Call Now</button>
+                        <button class="contact-btn" onclick="alert('Digital contract initiated')">Get Contract</button>
+                    </div>
+                `;
+            });
+            document.getElementById('centersList').innerHTML = html;
+
+            let fpoHtml = '';
+            fpos.forEach(f => {
+                fpoHtml += `
+                    <div class="fpo-card">
+                        <h3>${f.name}</h3>
+                        <p>👥 ${f.members} | ✓ ${f.benefit}</p>
+                        <button class="join-btn" onclick="alert('Joining ${f.name}. Contact: ${f.contact}')">Join FPO</button>
+                    </div>
+                `;
+            });
+            document.getElementById('fpoList').innerHTML = fpoHtml;
+        }
+
+        updateCenters();
+    </script>
+</body>
+</html>

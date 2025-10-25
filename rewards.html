@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamification & Rewards</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%); color: white; padding: 20px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5em; font-weight: bold; }
+        .back-link { color: white; text-decoration: none; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 5px; }
+        .hero { background: linear-gradient(rgba(76, 140, 74, 0.9), rgba(44, 95, 45, 0.9)); color: white; padding: 50px 20px; text-align: center; }
+        .hero h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .main-content { padding: 40px 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .section-title { color: #2c5f2d; font-size: 1.5em; margin-bottom: 20px; border-bottom: 3px solid #4c8c4a; padding-bottom: 8px; }
+        .profile-box { background: linear-gradient(135deg, #4c8c4a 0%, #2c5f2d 100%); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 25px; }
+        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; background: white; color: #2c5f2d; display: flex; align-items: center; justify-content: center; font-size: 3em; margin: 0 auto 15px; }
+        .profile-name { font-size: 1.8em; font-weight: bold; margin-bottom: 10px; }
+        .profile-level { font-size: 1.2em; opacity: 0.9; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 20px 0; }
+        .stat-box { background: #f0f7f0; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid #4c8c4a; }
+        .stat-value { font-size: 2em; font-weight: bold; color: #2c5f2d; }
+        .stat-label { font-size: 0.9em; color: #666; margin-top: 5px; }
+        .progress-bar { background: #e0e0e0; height: 25px; border-radius: 15px; overflow: hidden; margin: 15px 0; }
+        .progress-fill { background: linear-gradient(90deg, #4c8c4a, #2c5f2d); height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9em; transition: width 1s; }
+        .badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; margin: 20px 0; }
+        .badge { background: #f0f7f0; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid #4c8c4a; cursor: pointer; transition: all 0.3s; }
+        .badge:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .badge.locked { opacity: 0.5; border-color: #ddd; }
+        .badge-icon { font-size: 3em; margin-bottom: 10px; }
+        .badge-name { font-weight: bold; color: #2c5f2d; margin-bottom: 5px; }
+        .badge-desc { font-size: 0.85em; color: #666; }
+        .leaderboard { background: white; border-radius: 10px; overflow: hidden; }
+        .leaderboard-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #f0f0f0; }
+        .leaderboard-row:nth-child(odd) { background: #f9f9f9; }
+        .leaderboard-row.current { background: #d4edda; border-left: 4px solid #28a745; }
+        .rank { font-size: 1.2em; font-weight: bold; color: #2c5f2d; width: 40px; }
+        .rank.top3 { color: #f39c12; }
+        .farmer-info { flex: 1; }
+        .points { font-weight: bold; color: #4c8c4a; }
+        .reward-card { background: #fff3cd; border-left: 4px solid #f39c12; padding: 20px; margin-bottom: 15px; border-radius: 8px; }
+        .reward-card h3 { color: #856404; margin-bottom: 10px; }
+        .claim-btn { background: #f39c12; color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .claim-btn:hover { background: #e67e22; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.8em; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🌾 Crop Shift Mitigation</div>
+                <a href="index.html" class="back-link">← Back</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>🏆 Gamification & Rewards</h1>
+            <p>Earn rewards for sustainable oilseed farming</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="profile-box">
+                <div class="profile-avatar">👨‍🌾</div>
+                <div class="profile-name">Ramesh Kumar</div>
+                <div class="profile-level">Level 7 - Gold Farmer</div>
+                <div class="progress-bar" style="margin-top: 20px;">
+                    <div class="progress-fill" style="width: 65%;">2,850 / 4,000 XP</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value">2,850</div>
+                        <div class="stat-label">Total Points</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Badges Earned</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">#23</div>
+                        <div class="stat-label">Your Rank</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Streak (Years)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Your Badges</h2>
+                <div class="badge-grid">
+                    <div class="badge">
+                        <div class="badge-icon">🌱</div>
+                        <div class="badge-name">Starter</div>
+                        <div class="badge-desc">First oilseed crop</div>
+                    </div>
+                    <div class="badge">
+                        <div class="badge-icon">📊</div>
+                        <div class="badge-name">Data Pro</div>
+                        <div class="badge-desc">10+ app uses</div>
+                    </div>
+                    <div class="badge">
+                        <div class="badge-icon">💰</div>
+                        <div class="badge-name">Profit Master</div>
+                        <div class="badge-desc">20%+ profit boost</div>
+                    </div>
+                    <div class="badge">
+                        <div class="badge-icon">🔥</div>
+                        <div class="badge-name">3-Year Streak</div>
+                        <div class="badge-desc">3 seasons oilseeds</div>
+                    </div>
+                    <div class="badge locked">
+                        <div class="badge-icon">🏅</div>
+                        <div class="badge-name">Champion</div>
+                        <div class="badge-desc">Top 10 ranking</div>
+                    </div>
+                    <div class="badge locked">
+                        <div class="badge-icon">👑</div>
+                        <div class="badge-name">Legend</div>
+                        <div class="badge-desc">5-year streak</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Regional Leaderboard</h2>
+                <div class="leaderboard">
+                    <div class="leaderboard-row">
+                        <div class="rank top3">🥇</div>
+                        <div class="farmer-info">
+                            <strong>Suresh Patel</strong> - Gujarat
+                        </div>
+                        <div class="points">4,850 pts</div>
+                    </div>
+                    <div class="leaderboard-row">
+                        <div class="rank top3">🥈</div>
+                        <div class="farmer-info">
+                            <strong>Manjeet Singh</strong> - Punjab
+                        </div>
+                        <div class="points">4,520 pts</div>
+                    </div>
+                    <div class="leaderboard-row">
+                        <div class="rank top3">🥉</div>
+                        <div class="farmer-info">
+                            <strong>Vijay Reddy</strong> - Karnataka
+                        </div>
+                        <div class="points">4,200 pts</div>
+                    </div>
+                    <div class="leaderboard-row">
+                        <div class="rank">4</div>
+                        <div class="farmer-info">
+                            <strong>Anita Sharma</strong> - Rajasthan
+                        </div>
+                        <div class="points">3,980 pts</div>
+                    </div>
+                    <div class="leaderboard-row current">
+                        <div class="rank">23</div>
+                        <div class="farmer-info">
+                            <strong>You - Ramesh Kumar</strong> - Madhya Pradesh
+                        </div>
+                        <div class="points">2,850 pts</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Available Rewards</h2>
+                <div class="reward-card">
+                    <h3>🎁 500 Points - ₹200 Input Voucher</h3>
+                    <p>Redeem for seeds, fertilizer, or other farm inputs</p>
+                    <button class="claim-btn" onclick="claim('Input Voucher')">Claim Reward</button>
+                </div>
+                <div class="reward-card">
+                    <h3>🎁 1000 Points - Free Soil Testing</h3>
+                    <p>Complete soil analysis worth ₹500</p>
+                    <button class="claim-btn" onclick="claim('Soil Testing')">Claim Reward</button>
+                </div>
+                <div class="reward-card">
+                    <h3>🎁 2000 Points - Premium Market Access</h3>
+                    <p>Direct connection to top buyers for 1 season</p>
+                    <button class="claim-btn" onclick="claim('Market Access')">Claim Reward</button>
+                </div>
+                <div class="reward-card">
+                    <h3>🎁 3000 Points - Smartphone</h3>
+                    <p>Brand new smartphone for farm management</p>
+                    <button class="claim-btn" onclick="claim('Smartphone')" disabled style="opacity: 0.5; cursor: not-allowed;">Locked (150 pts needed)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function claim(reward) {
+            alert(`🎉 Congratulations! You've claimed: ${reward}\n\nYour reward will be processed within 48 hours.`);
+        }
+    </script>
+</body>
+</html>

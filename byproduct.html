@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Byproduct Value Maximizer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%); color: white; padding: 20px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5em; font-weight: bold; }
+        .back-link { color: white; text-decoration: none; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 5px; }
+        .hero { background: linear-gradient(rgba(76, 140, 74, 0.9), rgba(44, 95, 45, 0.9)); color: white; padding: 50px 20px; text-align: center; }
+        .hero h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .main-content { padding: 40px 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .section-title { color: #2c5f2d; font-size: 1.5em; margin-bottom: 20px; border-bottom: 3px solid #4c8c4a; padding-bottom: 8px; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #2c5f2d; }
+        .input-group select, .input-group input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+        .calc-btn { background: #4c8c4a; color: white; padding: 15px 40px; border: none; border-radius: 8px; font-size: 1.1em; cursor: pointer; font-weight: bold; width: 100%; }
+        .calc-btn:hover { background: #2c5f2d; }
+        .revenue-box { background: linear-gradient(135deg, #4c8c4a 0%, #2c5f2d 100%); color: white; padding: 25px; border-radius: 10px; text-align: center; margin: 20px 0; }
+        .revenue-value { font-size: 2.5em; font-weight: bold; margin: 10px 0; }
+        .buyer-card { background: #f0f7f0; border-left: 4px solid #4c8c4a; padding: 20px; margin-bottom: 15px; border-radius: 8px; }
+        .buyer-card h3 { color: #2c5f2d; margin-bottom: 8px; }
+        .buyer-info { display: flex; gap: 15px; flex-wrap: wrap; margin: 10px 0; font-size: 0.95em; color: #666; }
+        .contact-btn { background: #f39c12; color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .contact-btn:hover { background: #e67e22; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.8em; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🌾 Crop Shift Mitigation</div>
+                <a href="index.html" class="back-link">← Back</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>♻️ Byproduct Value Maximizer</h1>
+            <p>Turn your farm waste into extra income</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="card">
+                <h2 class="section-title">Calculate Your Byproduct Revenue</h2>
+                <div class="input-group">
+                    <label for="crop">Main Crop Harvested</label>
+                    <select id="crop" onchange="updateByproducts()">
+                        <option value="groundnut">Groundnut</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="sunflower">Sunflower</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="quantity">Harvest Quantity (quintals)</label>
+                    <input type="number" id="quantity" value="50" min="1">
+                </div>
+                <button class="calc-btn" onclick="calculate()">Calculate Revenue</button>
+                
+                <div id="result" style="display:none;">
+                    <div class="revenue-box">
+                        <div>Additional Revenue from Byproducts</div>
+                        <div class="revenue-value" id="revenue">₹0</div>
+                        <div style="font-size: 0.9em; opacity: 0.9;" id="breakdown"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Verified Buyers Near You</h2>
+                <div id="buyersList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const byproducts = {
+            groundnut: { cake: 800, shell: 200, oil: 1200 },
+            mustard: { cake: 900, husk: 150, oil: 1100 },
+            soybean: { meal: 850, hull: 180, oil: 1000 },
+            sunflower: { cake: 820, shell: 220, oil: 1150 }
+        };
+
+        const buyers = [
+            { name: 'ABC Feed Industries', type: 'Oil Cake Buyer', price: '₹28/kg', dist: '8 km', phone: '9876543210' },
+            { name: 'Green Fertilizers Ltd', type: 'Husk & Shell Buyer', price: '₹5/kg', dist: '12 km', phone: '9876543211' },
+            { name: 'Regional Oil Mill', type: 'All Byproducts', price: 'Market Rate', dist: '15 km', phone: '9876543212' },
+            { name: 'Livestock Feed Co-op', type: 'Oil Cake & Meal', price: '₹30/kg', dist: '10 km', phone: '9876543213' }
+        ];
+
+        function updateByproducts() {
+            document.getElementById('result').style.display = 'none';
+        }
+
+        function calculate() {
+            const crop = document.getElementById('crop').value;
+            const qty = parseFloat(document.getElementById('quantity').value);
+            const data = byproducts[crop];
+            
+            const total = Object.values(data).reduce((sum, val) => sum + val, 0) * qty;
+            
+            document.getElementById('revenue').textContent = '₹' + Math.round(total).toLocaleString('en-IN');
+            document.getElementById('breakdown').textContent = `From ${Object.keys(data).join(', ')} sales`;
+            document.getElementById('result').style.display = 'block';
+            
+            updateBuyers();
+        }
+
+        function updateBuyers() {
+            let html = '';
+            buyers.forEach(b => {
+                html += `
+                    <div class="buyer-card">
+                        <h3>${b.name}</h3>
+                        <div class="buyer-info">
+                            <span>🏭 ${b.type}</span>
+                            <span>💰 ${b.price}</span>
+                            <span>📍 ${b.dist} away</span>
+                        </div>
+                        <button class="contact-btn" onclick="alert('Calling ${b.name} at ${b.phone}')">Contact Buyer</button>
+                    </div>
+                `;
+            });
+            document.getElementById('buyersList').innerHTML = html;
+        }
+
+        updateBuyers();
+    </script>
+</body>
+</html>

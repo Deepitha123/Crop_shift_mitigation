@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparative Crop Economics Dashboard - Oilseed Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%);
+            color: white;
+            padding: 30px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-intro {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border-left: 5px solid #f39c12;
+        }
+
+        .page-intro h2 {
+            color: #2c5f2d;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .page-intro p {
+            line-height: 1.8;
+            color: #666;
+            font-size: 1.05em;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4c8c4a, #f39c12);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .metric-title {
+            font-size: 0.95em;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-icon {
+            font-size: 2em;
+            opacity: 0.8;
+        }
+
+        .metric-value {
+            font-size: 2.8em;
+            font-weight: bold;
+            color: #4c8c4a;
+            margin: 10px 0;
+            line-height: 1;
+        }
+
+        .metric-label {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .metric-change {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .metric-change.positive {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .metric-change.negative {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #2c5f2d;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f0f7f0;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c5f2d;
+            font-size: 0.95em;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #4c8c4a;
+            box-shadow: 0 0 0 3px rgba(76, 140, 74, 0.1);
+        }
+
+        .update-btn {
+            background: #4c8c4a;
+            color: white;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            height: fit-content;
+            align-self: flex-end;
+        }
+
+        .update-btn:hover {
+            background: #2c5f2d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
+        }
+
+        .update-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .crop-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .crop-option {
+            padding: 20px;
+            border: 3px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            background: #fafafa;
+        }
+
+        .crop-option:hover {
+            border-color: #4c8c4a;
+            background: #f0f7f0;
+            transform: translateY(-3px);
+        }
+
+        .crop-option.selected {
+            border-color: #4c8c4a;
+            background: linear-gradient(135deg, #4c8c4a, #2c5f2d);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 140, 74, 0.3);
+        }
+
+        .crop-option .crop-emoji {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .crop-option h4 {
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .crop-option p {
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .comparison-table thead {
+            background: #2c5f2d;
+            color: white;
+        }
+
+        .comparison-table th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            white-space: nowrap;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .comparison-table tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .comparison-table .highlight-row {
+            background: #e8f5e9 !important;
+            font-weight: 600;
+        }
+
+        .positive {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .negative {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .neutral {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            position: relative;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 350px;
+            margin-top: 40px;
+            gap: 15px;
+            padding: 0 20px;
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 120px;
+        }
+
+        .bar {
+            width: 100%;
+            background: linear-gradient(to top, #4c8c4a, #2c5f2d);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(76, 140, 74, 0.3);
+            min-height: 50px;
+        }
+
+        .bar:hover {
+            filter: brightness(1.1);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(76, 140, 74, 0.4);
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #2c5f2d;
+            white-space: nowrap;
+            font-size: 0.95em;
+        }
+
+        .bar-label {
+            margin-top: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: center;
+            color: #666;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, #f9f9f9, #ffffff);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #4c8c4a;
+            transition: all 0.3s;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-left-color: #f39c12;
+        }
+
+        .insight-card h3 {
+            color: #2c5f2d;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .insight-card p {
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .alert-banner {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-left: 5px solid #f39c12;
+            padding: 20px 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(243, 156, 18, 0.2);
+        }
+
+        .alert-banner .icon {
+            font-size: 2em;
+        }
+
+        .alert-banner strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .tab-container {
+            margin-top: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 3px solid #e0e0e0;
+            margin-bottom: 25px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: #4c8c4a;
+            background: #f9f9f9;
+        }
+
+        .tab.active {
+            color: #2c5f2d;
+            border-bottom-color: #4c8c4a;
+            background: #f0f7f0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .resource-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #4c8c4a;
+        }
+
+        .resource-card h4 {
+            color: #2c5f2d;
+            margin-bottom: 15px;
+        }
+
+        .resource-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.4em;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-value {
+                font-size: 2.2em;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .bar-chart {
+                height: 280px;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>
+                <span>📊</span>
+                Comparative Crop Economics Dashboard
+            </h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-intro">
+            <h2>Make Data-Driven Farming Decisions</h2>
+            <p>Compare real-time market prices, input costs, and profit potential across different crops. Our comprehensive dashboard helps you identify the most profitable crops for your region, soil type, and available resources.</p>
+        </div>
+
+        <div class="alert-banner">
+            <span class="icon">📡</span>
+            <div>
+                <strong>Live Market Data</strong>
+                <span id="lastUpdated">Last updated: October 26, 2025 at 10:30 AM</span>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="dashboard-grid" id="metricsGrid">
+            <!-- Metrics will be dynamically inserted -->
+        </div>
+
+        <!-- Filters Section -->
+        <div class="section">
+            <h2 class="section-title">
+                <span>🎯</span>
+                Customize Your Analysis
+            </h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="region">Select Your Region</label>
+                    <select id="region" onchange="updateDashboard()">
+                        <option value="punjab">Punjab</option>
+                        <option value="gujarat">Gujarat</option>
+                        <option value="mp">Madhya Pradesh</option>
+                        <option value="rajasthan">Rajasthan</option>
+                        <option value="maharashtra">Maharashtra</option>
+                        <option value="karnataka">Karnataka</option>
+                        <option value="up">Uttar Pradesh</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="season">Cropping Season</label>
+                    <select id="season" onchange="updateDashboard()">
+                        <option value="kharif2025">Kharif 2025</option>
+                        <option value="rabi2025">Rabi 2025-26</option>
+                        <option value="zaid2025">Zaid 2025</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="landSize">Land Size (acres)</label>
+                    <input type="number" id="landSize" value="5" min="0.5" step="0.5" onchange="updateDashboard()">
+                </div>
+                <div class="filter-group">
+                    <button class="update-btn" onclick="refreshData()">🔄 Refresh Data</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crop Selection -->
+        <div class="section">
+            <h2 class="section-title">
+                <span>🌾</span>
+                Select Crops to Compare
+            </h2>
+            <p style="color: #666; margin-bottom: 20px;">Click on crops to add or remove them from your comparison. Select at least 2 crops.</p>
+            <div class="crop-selector" id="cropSelector">
+                <!-- Crops will be dynamically inserted -->
+            </div>
+        </div>
+
+        <!-- Tabbed Content -->
+        <div class="section">
+            <div class="tab-container">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(0)">📊 Detailed Comparison</button>
+                    <button class="tab" onclick="switchTab(1)">📈 Profit Analysis</button>
+                    <button class="tab" onclick="switchTab(2)">💧 Resource Requirements</button>
+                </div>
+
+                <!-- Tab 1: Detailed Comparison -->
+                <div class="tab-content active" id="tab0">
+                    <h3 style="color: #2c5f2d; margin-bottom: 20px;">Complete Cost-Benefit Breakdown</h3>
+                    <div class="table-wrapper" id="comparisonTableWrapper">
+                        <!-- Table will be dynamically inserted -->
+                    </div>
+                </div>
+
+                <!-- Tab 2: Profit Analysis -->
+                <div class="tab-content" id="tab1">
+                    <h3 style="color: #2c5f2d; margin-bottom: 20px;">Net Profit Comparison (Per Acre)</h3>
+                    <div class="chart-container">
+                        <div class="bar-chart" id="profitChart">
+                            <!-- Chart will be dynamically inserted -->
+                        </div>
+                    </div>
+                    
+                    <div class="insights-grid" id="profitInsights">
+                        <!-- Insights will be dynamically inserted -->
+                    </div>
+                </div>
+
+                <!-- Tab 3: Resource Requirements -->
+                <div class="tab-content" id="tab2">
+                    <h3 style="color: #2c5f2d; margin-bottom: 20px;">Water & Resource Comparison</h3>
+                    <div class="resource-grid" id="resourceGrid">
+                        <!-- Resources will be dynamically inserted -->
+                    </div>
+
+                    <div class="insights-grid" style="margin-top: 30px;">
+                        <div class="insight-card">
+                            <h3>💧 Water Efficiency</h3>
+                            <p>Oilseeds use 50-70% less water than paddy. Mustard is most water-efficient, perfect for water-scarce regions.</p>
+                        </div>
+                        <div class="insight-card">
+                            <h3>👷 Labor Requirements</h3>
+                            <p>Oilseeds need 20-40% less labor than paddy, reducing dependency on seasonal workers.</p>
+                        </div>
+                        <div class="insight-card">
+                            <h3>🌍 Environmental Impact</h3>
+                            <p>Lower water usage in oilseeds helps preserve groundwater and reduces soil salinity issues.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Insights Section -->
+        <div class="section">
+            <h2 class="section-title">
+                <span>💡</span>
+                Key Recommendations Based on Your Profile
+            </h2>
+            <div class="insights-grid" id="recommendations">
+                <!-- Recommendations will be dynamically inserted -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive crop database
+        const cropData = {
+            groundnut: {
+                name: 'Groundnut',
+                emoji: '🥜',
+                type: 'Oilseed Crop',
+                marketPrice: { punjab: 5850, gujarat: 6100, mp: 5750, rajasthan: 5900, maharashtra: 5950, karnataka: 6050, up: 5800 },
+                msp: 5850,
+                seedCost: 4500,
+                fertilizerCost: 6000,
+                pesticideCost: 3500,
+                laborCost: 12000,
+                irrigationCost: 2500,
+                yield: { punjab: 12, gujarat: 14, mp: 11, rajasthan: 10, maharashtra: 13, karnataka: 13, up: 11 },
+                byproduct: 6500,
+                duration: '120-130 days',
+                waterReq: 'Medium',
+                irrigationTimes: '4-5',
+                waterInches: '20-25',
+                laborDays: '40-45'
+            },
+            mustard: {
+                name: 'Mustard',
+                emoji: '🌻',
+                type: 'Oilseed Crop',
+                marketPrice: { punjab: 5200, gujarat: 5350, mp: 5150, rajasthan: 5400, maharashtra: 5250, karnataka: 5300, up: 5180 },
+                msp: 5450,
+                seedCost: 1200,
+                fertilizerCost: 4500,
+                pesticideCost: 2800,
+                laborCost: 9000,
+                irrigationCost: 1500,
+                yield: { punjab: 10, gujarat: 11, mp: 9, rajasthan: 12, maharashtra: 10, karnataka: 10, up: 9 },
+                byproduct: 4200,
+                duration: '90-100 days',
+                waterReq: 'Low',
+                irrigationTimes: '2-3',
+                waterInches: '12-15',
+                laborDays: '30-35'
+            },
+            soybean: {
+                name: 'Soybean',
+                emoji: '🫘',
+                type: 'Oilseed Crop',
+                marketPrice: { punjab: 4800, gujarat: 4950, mp: 5000, rajasthan: 4850, maharashtra: 4900, karnataka: 4920, up: 4780 },
+                msp: 4600,
+                seedCost: 2800,
+                fertilizerCost: 5200,
+                pesticideCost: 3200,
+                laborCost: 10500,
+                irrigationCost: 2300,
+                yield: { punjab: 11, gujarat: 12, mp: 13, rajasthan: 10, maharashtra: 12, karnataka: 12, up: 11 },
+                byproduct: 3800,
+                duration: '90-100 days',
+                waterReq: 'Medium',
+                irrigationTimes: '3-4',
+                waterInches: '18-22',
+                laborDays: '35-40'
+            },
+            sunflower: {
+                name: 'Sunflower',
+                emoji: '🌻',
+                type: 'Oilseed Crop',
+                marketPrice: { punjab: 6100, gujarat: 6300, mp: 6050, rajasthan: 6200, maharashtra: 6150, karnataka: 6400, up: 6080 },
+                msp: 6760,
+                seedCost: 3500,
+                fertilizerCost: 5800,
+                pesticideCost: 3800,
+                laborCost: 11000,
+                irrigationCost: 3200,
+                yield: { punjab: 9, gujarat: 10, mp: 8, rajasthan: 9, maharashtra: 9, karnataka: 11, up: 8 },
+                byproduct: 5100,
+                duration: '100-110 days',
+                waterReq: 'Medium-High',
+                irrigationTimes: '5-6',
+                waterInches: '25-28',
+                laborDays: '38-42'
+            },
+            paddy: {
+                name: 'Paddy',
+                emoji: '🌾',
+                type: 'Cereal Crop',
+                marketPrice: { punjab: 2100, gujarat: 2150, mp: 2080, rajasthan: 2120, maharashtra: 2130, karnataka: 2140, up: 2090 },
+                msp: 2183,
+                seedCost: 2500,
+                fertilizerCost: 8000,
+                pesticideCost: 4500,
+                laborCost: 15000,
+                irrigationCost: 4000,
+                yield: { punjab: 25, gujarat: 22, mp: 20, rajasthan: 18, maharashtra: 23, karnataka: 24, up: 24 },
+                byproduct: 1200,
+                duration: '120-150 days',
+                waterReq: 'Very High',
+                irrigationTimes: '15-20',
+                waterInches: '50-60',
+                laborDays: '50-55'
+            },
+            sugarcane: {
+                name: 'Sugarcane',
+                emoji: '🌽',
+                type: 'Cash Crop',
+                marketPrice: { punjab: 350, gujarat: 380, mp: 340, rajasthan: 360, maharashtra: 370, karnataka: 375, up: 355 },
+                msp: 315,
+                seedCost: 8000,
+                fertilizerCost: 12000,
+                pesticideCost: 6000,
+                laborCost: 25000,
+                irrigationCost: 8000,
+                yield: { punjab: 300, gujarat: 320, mp: 280, rajasthan: 270, maharashtra: 310, karnataka: 315, up: 295 },
+                byproduct: 2500,
+                duration: '12 months',
+                waterReq: 'Very High',
+                irrigationTimes: '25-30',
+                waterInches: '80-100',
+                laborDays: '80-90'
+            }
+        };
+
+        let selectedCrops = ['groundnut', 'mustard', 'soybean', 'sunflower', 'paddy'];
+        let currentRegion = 'punjab';
+        let currentSeason = 'kharif2025';
+        let landSize = 5;
+
+        // Initialize dashboard
+        function initDashboard() {
+            renderCropSelector();
+            updateDashboard();
+        }
+
+        // Render crop selector
+        function renderCropSelector() {
+            const selector = document.getElementById('cropSelector');
+            selector.innerHTML = Object.keys(cropData).map(cropId => {
+                const crop = cropData[cropId];
+                const isSelected = selectedCrops.includes(cropId);
+                return `
+                    <div class="crop-option ${isSelected ? 'selected' : ''}" onclick="toggleCrop('${cropId}')">
+                        <span class="crop-emoji">${crop.emoji}</span>
+                        <h4>${crop.name}</h4>
+                        <p>${crop.type}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Toggle crop selection
+        function toggleCrop(cropId) {
+            if (selectedCrops.includes(cropId)) {
+                if (selectedCrops.length <= 2) {
+                    alert('Please select at least 2 crops for comparison.');
+                    return;
+                }
+                selectedCrops = selectedCrops.filter(id => id !== cropId);
+            } else {
+                selectedCrops.push(cropId);
+            }
+            renderCropSelector();
+            updateDashboard();
+        }
+
+        // Calculate metrics for a crop
+        function calculateMetrics(cropId) {
+            const crop = cropData[cropId];
+            const price = crop.marketPrice[currentRegion];
+            const yield_ = crop.yield[currentRegion];
+            const totalInputCost = crop.seedCost + crop.fertilizerCost + crop.pesticideCost + 
+                                   crop.laborCost + crop.irrigationCost;
+            const grossRevenue = price * yield_;
+            const netProfit = grossRevenue - totalInputCost + crop.byproduct;
+            const profitMargin = ((netProfit / grossRevenue) * 100).toFixed(1);
+            
+            return {
+                crop,
+                price,
+                yield: yield_,
+                totalInputCost,
+                grossRevenue,
+                netProfit,
+                profitMargin,
+                totalWithByproduct: netProfit
+            };
+        }
+
+        // Update main dashboard metrics
+        function updateMetrics() {
+            const firstCrop = calculateMetrics(selectedCrops[0]);
+            const metricsGrid = document.getElementById('metricsGrid');
+            
+            metricsGrid.innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Market Price</span>
+                        <span class="metric-icon">💰</span>
+                    </div>
+                    <div class="metric-value">₹${firstCrop.price.toLocaleString()}</div>
+                    <div class="metric-label">Per quintal (${firstCrop.crop.name})</div>
+                    <span class="metric-change positive">↑ 8.2% from last month</span>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Input Cost</span>
+                        <span class="metric-icon">🌱</span>
+                    </div>
+                    <div class="metric-value">₹${firstCrop.totalInputCost.toLocaleString()}</div>
+                    <div class="metric-label">Per acre (All inputs)</div>
+                    <span class="metric-change negative">↑ 3.5% from last season</span>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Expected Yield</span>
+                        <span class="metric-icon">📦</span>
+                    </div>
+                    <div class="metric-value">${firstCrop.yield} Q</div>
+                    <div class="metric-label">Quintals per acre</div>
+                    <span class="metric-change positive">↑ 5.3% with new techniques</span>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Net Profit</span>
+                        <span class="metric-icon">💵</span>
+                    </div>
+                    <div class="metric-value">₹${firstCrop.netProfit.toLocaleString()}</div>
+                    <div class="metric-label">Per acre annually</div>
+                    <span class="metric-change positive">↑ ${firstCrop.profitMargin}% profit margin</span>
+                </div>
+            `;
+        }
+
+        // Generate comparison table
+        function generateComparisonTable() {
+            const metrics = selectedCrops.map(id => calculateMetrics(id));
+            const tableWrapper = document.getElementById('comparisonTableWrapper');
+            
+            const headers = ['Parameter', ...metrics.map(m => m.crop.name)].join('</th><th>');
+            
+            const rows = [
+                ['Current Market Price (₹/Q)', ...metrics.map(m => `₹${m.price.toLocaleString()}`)],
+                ['MSP (₹/Q)', ...metrics.map(m => `₹${m.crop.msp.toLocaleString()}`)],
+                ['Seed Cost (₹/acre)', ...metrics.map(m => `₹${m.crop.seedCost.toLocaleString()}`)],
+                ['Fertilizer Cost (₹/acre)', ...metrics.map(m => `₹${m.crop.fertilizerCost.toLocaleString()}`)],
+                ['Pesticide Cost (₹/acre)', ...metrics.map(m => `₹${m.crop.pesticideCost.toLocaleString()}`)],
+                ['Labor Cost (₹/acre)', ...metrics.map(m => `₹${m.crop.laborCost.toLocaleString()}`)],
+                ['Irrigation Cost (₹/acre)', ...metrics.map(m => `₹${m.crop.irrigationCost.toLocaleString()}`)],
+                ['<strong>Total Input Cost (₹/acre)</strong>', ...metrics.map(m => `<strong>₹${m.totalInputCost.toLocaleString()}</strong>`), true],
+                ['Average Yield (Q/acre)', ...metrics.map(m => `${m.yield} Q`)],
+                ['Gross Revenue (₹/acre)', ...metrics.map(m => `₹${m.grossRevenue.toLocaleString()}`)],
+                ['<strong>Net Profit (₹/acre)</strong>', ...metrics.map(m => `<strong class="positive">₹${m.netProfit.toLocaleString()}</strong>`), true],
+                ['Profit Margin (%)', ...metrics.map(m => {
+                    const margin = parseFloat(m.profitMargin);
+                    const colorClass = margin > 55 ? 'positive' : margin > 40 ? 'neutral' : 'negative';
+                    return `<span class="${colorClass}">${m.profitMargin}%</span>`;
+                })],
+                ['Byproduct Value (₹/acre)', ...metrics.map(m => `<span class="positive">₹${m.crop.byproduct.toLocaleString()}</span>`)],
+                ['Growing Duration', ...metrics.map(m => m.crop.duration)]
+            ];
+            
+            const tableHTML = `
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>${headers}</th></tr>
+                    </thead>
+                    <tbody>
+                        ${rows.map(row => {
+                            const isHighlight = row[row.length - 1] === true;
+                            const data = isHighlight ? row.slice(0, -1) : row;
+                            return `<tr class="${isHighlight ? 'highlight-row' : ''}">
+                                ${data.map((cell, i) => 
+                                    i === 0 ? `<td>${cell}</td>` : `<td>${cell}</td>`
+                                ).join('')}
+                            </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            tableWrapper.innerHTML = tableHTML;
+        }
+
+        // Generate profit chart
+        function generateProfitChart() {
+            const metrics = selectedCrops.map(id => calculateMetrics(id));
+            const maxProfit = Math.max(...metrics.map(m => m.netProfit));
+            const chartDiv = document.getElementById('profitChart');
+            
+            chartDiv.innerHTML = metrics.map(m => {
+                const height = (m.netProfit / maxProfit * 100).toFixed(1);
+                return `
+                    <div class="bar-wrapper">
+                        <div class="bar" style="height: ${height}%;">
+                            <span class="bar-value">₹${m.netProfit.toLocaleString()}</span>
+                        </div>
+                        <span class="bar-label">${m.crop.name}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            generateProfitInsights(metrics);
+        }
+
+        // Generate profit insights
+        function generateProfitInsights(metrics) {
+            const sorted = [...metrics].sort((a, b) => b.netProfit - a.netProfit);
+            const highest = sorted[0];
+            const lowestInput = [...metrics].sort((a, b) => a.totalInputCost - b.totalInputCost)[0];
+            const bestMargin = [...metrics].sort((a, b) => parseFloat(b.profitMargin) - parseFloat(a.profitMargin))[0];
+            const quickest = [...metrics].filter(m => m.crop.duration.includes('90')).sort((a, b) => b.netProfit - a.netProfit)[0];
+            
+            const insightsDiv = document.getElementById('profitInsights');
+            insightsDiv.innerHTML = `
+                <div class="insight-card">
+                    <h3>${highest.crop.emoji} Highest Net Returns</h3>
+                    <p>${highest.crop.name} leads with ₹${highest.netProfit.toLocaleString()}/acre profit, offering superior returns in ${currentRegion.toUpperCase()} region.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>📊 Best Profit Margin</h3>
+                    <p>${bestMargin.crop.name} shows ${bestMargin.profitMargin}% profit margin, making it highly efficient for your investment.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>💰 Lowest Investment</h3>
+                    <p>${lowestInput.crop.name} requires only ₹${lowestInput.totalInputCost.toLocaleString()} input cost, ideal for starting farmers.</p>
+                </div>
+                ${quickest ? `
+                <div class="insight-card">
+                    <h3>⏱️ Quick Returns</h3>
+                    <p>${quickest.crop.name} matures in ${quickest.crop.duration}, enabling double cropping for increased annual income.</p>
+                </div>
+                ` : ''}
+            `;
+        }
+
+        // Generate resource requirements
+        function generateResourceGrid() {
+            const resourceGrid = document.getElementById('resourceGrid');
+            
+            resourceGrid.innerHTML = selectedCrops.map(cropId => {
+                const crop = cropData[cropId];
+                const waterClass = crop.waterReq === 'Low' ? 'positive' : 
+                                  crop.waterReq.includes('High') ? 'negative' : 'neutral';
+                
+                return `
+                    <div class="resource-card">
+                        <h4>${crop.emoji} ${crop.name}</h4>
+                        <div class="resource-item">
+                            <span>Water Requirement:</span>
+                            <strong class="${waterClass}">${crop.waterReq}</strong>
+                        </div>
+                        <div class="resource-item">
+                            <span>Irrigation (times):</span>
+                            <strong>${crop.irrigationTimes}</strong>
+                        </div>
+                        <div class="resource-item">
+                            <span>Water (acre-inch):</span>
+                            <strong>${crop.waterInches}</strong>
+                        </div>
+                        <div class="resource-item">
+                            <span>Labor Days:</span>
+                            <strong>${crop.laborDays}</strong>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Generate recommendations
+        function generateRecommendations() {
+            const metrics = selectedCrops.map(id => calculateMetrics(id));
+            const sorted = [...metrics].sort((a, b) => b.netProfit - a.netProfit);
+            const best = sorted[0];
+            const totalLandProfit = (best.netProfit * landSize).toLocaleString();
+            
+            const recommendationsDiv = document.getElementById('recommendations');
+            recommendationsDiv.innerHTML = `
+                <div class="insight-card">
+                    <h3>🎯 Best Choice for ${currentRegion.toUpperCase()}</h3>
+                    <p>${best.crop.name} offers the highest returns at ₹${best.netProfit.toLocaleString()}/acre. For your ${landSize} acres, expect ₹${totalLandProfit} net profit.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>💰 Maximum Profitability</h3>
+                    <p>Focus on ${best.crop.name} with crop rotation. Consider intercropping to maximize land utilization and income.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>🌱 Sustainable Choice</h3>
+                    <p>Oilseeds fix nitrogen in soil, reduce fertilizer needs for next crop, and support national self-sufficiency goals.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>📅 Crop Rotation Strategy</h3>
+                    <p>Combine Kharif and Rabi crops for year-round income. Follow legumes with cereals for optimal soil health.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>🏆 Government Support</h3>
+                    <p>Access NMEO-OS subsidies, MSP guarantees at ₹${best.crop.msp.toLocaleString()}/Q, and procurement support for oilseed farmers.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>📊 Market Trends</h3>
+                    <p>Edible oil demand growing 5% annually. Current market price: ₹${best.price.toLocaleString()}/Q ensures stable income.</p>
+                </div>
+            `;
+        }
+
+        // Update entire dashboard
+        function updateDashboard() {
+            currentRegion = document.getElementById('region').value;
+            currentSeason = document.getElementById('season').value;
+            landSize = parseFloat(document.getElementById('landSize').value);
+            
+            updateMetrics();
+            generateComparisonTable();
+            generateProfitChart();
+            generateResourceGrid();
+            generateRecommendations();
+        }
+
+        // Switch tabs
+        function switchTab(tabIndex) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            tabs[tabIndex].classList.add('active');
+            document.getElementById('tab' + tabIndex).classList.add('active');
+        }
+
+        // Refresh data with animation
+        function refreshData() {
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Loading...';
+            btn.disabled = true;
+            
+            // Simulate market data refresh with slight variations
+            setTimeout(() => {
+                Object.keys(cropData).forEach(cropId => {
+                    Object.keys(cropData[cropId].marketPrice).forEach(region => {
+                        const variation = 1 + (Math.random() - 0.5) * 0.1; // ±5% variation
+                        cropData[cropId].marketPrice[region] = Math.round(
+                            cropData[cropId].marketPrice[region] * variation
+                        );
+                    });
+                });
+                
+                updateDashboard();
+                
+                const now = new Date();
+                const timeString = now.toLocaleString('en-US', { 
+                    month: 'long', 
+                    day: 'numeric', 
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true 
+                });
+                document.getElementById('lastUpdated').textContent = `Last updated: ${timeString}`;
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                // Show success message
+                const banner = document.querySelector('.alert-banner');
+                banner.style.background = 'linear-gradient(135deg, #d4edda, #c3e6cb)';
+                banner.querySelector('strong').textContent = 'Data Refreshed!';
+                setTimeout(() => {
+                    banner.style.background = 'linear-gradient(135deg, #fff3cd, #ffeaa7)';
+                    banner.querySelector('strong').textContent = 'Live Market Data';
+                }, 2000);
+            }, 1500);
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', initDashboard);
+    </script>
+</body>
+</html>

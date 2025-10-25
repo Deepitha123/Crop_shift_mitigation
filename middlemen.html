@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Middlemen Margin Reduction</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #2c5f2d 0%, #4c8c4a 100%); color: white; padding: 20px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5em; font-weight: bold; }
+        .back-link { color: white; text-decoration: none; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 5px; }
+        .hero { background: linear-gradient(rgba(76, 140, 74, 0.9), rgba(44, 95, 45, 0.9)); color: white; padding: 50px 20px; text-align: center; }
+        .hero h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .main-content { padding: 40px 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .section-title { color: #2c5f2d; font-size: 1.5em; margin-bottom: 20px; border-bottom: 3px solid #4c8c4a; padding-bottom: 8px; }
+        .comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
+        .comparison-box { padding: 25px; border-radius: 10px; text-align: center; }
+        .comparison-box.old { background: #f8d7da; border: 2px solid #dc3545; }
+        .comparison-box.new { background: #d4edda; border: 2px solid #28a745; }
+        .comparison-title { font-weight: bold; font-size: 1.1em; margin-bottom: 15px; }
+        .comparison-price { font-size: 2.5em; font-weight: bold; margin: 15px 0; }
+        .comparison-box.old .comparison-price { color: #dc3545; }
+        .comparison-box.new .comparison-price { color: #28a745; }
+        .savings-box { background: linear-gradient(135deg, #4c8c4a 0%, #2c5f2d 100%); color: white; padding: 30px; border-radius: 10px; text-align: center; margin: 20px 0; }
+        .savings-value { font-size: 3em; font-weight: bold; margin: 10px 0; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #2c5f2d; }
+        .input-group select, .input-group input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+        .calc-btn { background: #4c8c4a; color: white; padding: 15px 40px; border: none; border-radius: 8px; font-size: 1.1em; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+        .calc-btn:hover { background: #2c5f2d; }
+        .buyer-card { background: #f0f7f0; border-left: 4px solid #4c8c4a; padding: 20px; margin-bottom: 15px; border-radius: 8px; }
+        .buyer-card h3 { color: #2c5f2d; margin-bottom: 10px; }
+        .buyer-info { display: flex; gap: 15px; flex-wrap: wrap; margin: 10px 0; font-size: 0.95em; color: #666; }
+        .verified-badge { background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; display: inline-block; margin-top: 10px; }
+        .connect-btn { background: #f39c12; color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .connect-btn:hover { background: #e67e22; }
+        .breakdown { background: #f9f9f9; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .breakdown-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #ddd; }
+        .breakdown-row:last-child { border-bottom: none; font-weight: bold; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.8em; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🌾 Crop Shift Mitigation</div>
+                <a href="index.html" class="back-link">← Back</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>🤝 Middlemen Margin Reduction</h1>
+            <p>Keep more profit by selling directly to verified buyers</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="card">
+                <h2 class="section-title">Calculate Your Savings</h2>
+                <div class="input-group">
+                    <label for="crop">Your Crop</label>
+                    <select id="crop">
+                        <option value="groundnut">Groundnut</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="sunflower">Sunflower</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="quantity">Quantity (quintals)</label>
+                    <input type="number" id="quantity" value="50" min="1">
+                </div>
+                <button class="calc-btn" onclick="calculate()">Calculate My Savings</button>
+            </div>
+
+            <div id="results" style="display:none;">
+                <div class="card">
+                    <h2 class="section-title">Your Earnings Comparison</h2>
+                    <div class="comparison">
+                        <div class="comparison-box old">
+                            <div class="comparison-title">❌ Through Middlemen</div>
+                            <div class="comparison-price" id="oldPrice">₹0</div>
+                            <div>Multiple commissions deducted</div>
+                        </div>
+                        <div class="comparison-box new">
+                            <div class="comparison-title">✓ Direct to Buyer</div>
+                            <div class="comparison-price" id="newPrice">₹0</div>
+                            <div>No middleman charges</div>
+                        </div>
+                    </div>
+
+                    <div class="savings-box">
+                        <div>Your Total Savings</div>
+                        <div class="savings-value" id="savings">₹0</div>
+                        <div style="font-size: 1.1em; opacity: 0.9;">Money kept in your pocket!</div>
+                    </div>
+
+                    <div class="breakdown">
+                        <h3 style="color: #2c5f2d; margin-bottom: 15px;">Cost Breakdown</h3>
+                        <div class="breakdown-row">
+                            <span>Market Price</span>
+                            <span id="marketPrice">₹0</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Commission Agent (5%)</span>
+                            <span id="commission">-₹0</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Transporter (3%)</span>
+                            <span id="transport">-₹0</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Trader Margin (8%)</span>
+                            <span id="trader">-₹0</span>
+                        </div>
+                        <div class="breakdown-row" style="color: #28a745;">
+                            <span>Direct Buyer Payment</span>
+                            <span id="direct">₹0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">Verified Direct Buyers</h2>
+                <div id="buyersList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const prices = {
+            groundnut: 5400,
+            mustard: 4800,
+            soybean: 4200,
+            sunflower: 5800
+        };
+
+        const buyers = [
+            { name: 'Patanjali Oil Mills', type: 'Oil Processor', offer: '98% of market rate', dist: '25 km', rating: '4.8/5' },
+            { name: 'Adani Wilmar Ltd', type: 'Food Processor', offer: '97% of market rate', dist: '35 km', rating: '4.7/5' },
+            { name: 'Mother Dairy', type: 'Cooperative', offer: '99% of market rate', dist: '18 km', rating: '4.9/5' },
+            { name: 'Regional FPO Collective', type: 'Farmer Organization', offer: '98.5% of market rate', dist: '12 km', rating: '4.8/5' }
+        ];
+
+        function calculate() {
+            const crop = document.getElementById('crop').value;
+            const qty = parseFloat(document.getElementById('quantity').value);
+            const basePrice = prices[crop];
+            
+            const marketValue = basePrice * qty;
+            const commission = marketValue * 0.05;
+            const transport = marketValue * 0.03;
+            const trader = marketValue * 0.08;
+            const oldTotal = marketValue - commission - transport - trader;
+            const newTotal = marketValue * 0.98; // Direct buyer at 98% rate
+            const savings = newTotal - oldTotal;
+
+            document.getElementById('oldPrice').textContent = '₹' + Math.round(oldTotal).toLocaleString('en-IN');
+            document.getElementById('newPrice').textContent = '₹' + Math.round(newTotal).toLocaleString('en-IN');
+            document.getElementById('savings').textContent = '₹' + Math.round(savings).toLocaleString('en-IN');
+
+            document.getElementById('marketPrice').textContent = '₹' + Math.round(marketValue).toLocaleString('en-IN');
+            document.getElementById('commission').textContent = '-₹' + Math.round(commission).toLocaleString('en-IN');
+            document.getElementById('transport').textContent = '-₹' + Math.round(transport).toLocaleString('en-IN');
+            document.getElementById('trader').textContent = '-₹' + Math.round(trader).toLocaleString('en-IN');
+            document.getElementById('direct').textContent = '₹' + Math.round(newTotal).toLocaleString('en-IN');
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+
+            updateBuyers();
+        }
+
+        function updateBuyers() {
+            let html = '';
+            buyers.forEach(b => {
+                html += `
+                    <div class="buyer-card">
+                        <h3>${b.name}</h3>
+                        <div class="buyer-info">
+                            <span>🏭 ${b.type}</span>
+                            <span>💰 ${b.offer}</span>
+                            <span>📍 ${b.dist}</span>
+                            <span>⭐ ${b.rating}</span>
+                        </div>
+                        <span class="verified-badge">✓ Verified Buyer</span>
+                        <button class="connect-btn" onclick="alert('Connecting you with ${b.name}. They will contact you within 24 hours.')">Connect Now</button>
+                    </div>
+                `;
+            });
+            document.getElementById('buyersList').innerHTML = html;
+        }
+
+        updateBuyers();
+    </script>
+</body>
+</html>
